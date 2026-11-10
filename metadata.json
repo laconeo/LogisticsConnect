@@ -1,5 +1,6 @@
 {
-  "name": "",
-  "description": "",
-  "requestFramePermissions": []
+  "name": "Logistics Connect — Gestión y Trazabilidad de Activos",
+  "description": "Plataforma de gestión, despacho y trazabilidad inmutable de activos y Centros Móviles con validación de evidencias, QR opaco y operación en terreno.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }
