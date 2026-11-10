@@ -10,6 +10,11 @@ import {
   HardDrive,
   FileCode2,
   FileSpreadsheet,
+  Cloud,
+  RefreshCw,
+  AlertCircle,
+  CheckCircle2,
+  ExternalLink,
 } from 'lucide-react';
 import {
   PersistedDatabaseSnapshot,
@@ -17,6 +22,10 @@ import {
   downloadShipmentsCsv,
 } from '../services/databaseService';
 import { LOGISTICS_CONNECT_POSTGRES_DDL } from '../services/sqlSchema';
+import {
+  isSupabaseConfigured,
+  testSupabaseConnection,
+} from '../services/supabaseClient';
 
 interface DatabaseConfigModalProps {
   snapshot: PersistedDatabaseSnapshot;
@@ -31,9 +40,34 @@ export const DatabaseConfigModal: React.FC<DatabaseConfigModalProps> = ({
   onResetFactory,
   onClose,
 }) => {
-  const [tab, setTab] = useState<'respaldo' | 'sql'>('respaldo');
+  const [tab, setTab] = useState<'respaldo' | 'sql' | 'supabase'>('supabase');
   const [copiedSql, setCopiedSql] = useState(false);
   const [importError, setImportError] = useState<string | null>(null);
+
+  // Estado para la prueba de conexión con Supabase
+  const [isTesting, setIsTesting] = useState(false);
+  const [testResult, setTestResult] = useState<{
+    success: boolean;
+    message: string;
+    tableFound?: boolean;
+    url?: string;
+  } | null>(null);
+
+  const handleTestConnection = async () => {
+    setIsTesting(true);
+    setTestResult(null);
+    try {
+      const result = await testSupabaseConnection();
+      setTestResult(result);
+    } catch (e) {
+      setTestResult({
+        success: false,
+        message: 'Error inesperado al probar conexión: ' + (e instanceof Error ? e.message : String(e)),
+      });
+    } finally {
+      setIsTesting(false);
+    }
+  };
 
   const handleExportJSON = () => {
     const json = JSON.stringify(snapshot, null, 2);
@@ -81,6 +115,8 @@ export const DatabaseConfigModal: React.FC<DatabaseConfigModalProps> = ({
     reader.readAsText(file);
   };
 
+  const configured = isSupabaseConfigured();
+
   return (
     <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
       <div className="bg-white border border-slate-200 rounded-lg max-w-4xl w-full overflow-hidden shadow-xl my-8">
@@ -92,10 +128,10 @@ export const DatabaseConfigModal: React.FC<DatabaseConfigModalProps> = ({
             </div>
             <div>
               <h3 className="text-sm font-bold">
-                Administración de Datos, Exportación CSV/JSON y Esquema SQL
+                Administración de Datos, Supabase y Esquema SQL
               </h3>
               <p className="text-[11px] text-slate-400">
-                Respaldo de base de datos local, reportes CSV para Excel y script DDL PostgreSQL.
+                Conexión Supabase PostgreSQL, respaldos JSON, reportes CSV y script DDL de tablas.
               </p>
             </div>
           </div>
@@ -108,32 +144,135 @@ export const DatabaseConfigModal: React.FC<DatabaseConfigModalProps> = ({
         </div>
 
         {/* Sub-tabs */}
-        <div className="px-6 pt-3 bg-slate-100 border-b border-slate-200 flex items-center gap-2">
+        <div className="px-6 pt-3 bg-slate-100 border-b border-slate-200 flex items-center gap-2 overflow-x-auto">
+          <button
+            onClick={() => setTab('supabase')}
+            className={`px-4 py-2 text-xs font-semibold rounded-t-md border-t border-x transition-colors flex items-center gap-1.5 cursor-pointer whitespace-nowrap ${
+              tab === 'supabase'
+                ? 'bg-white border-slate-200 text-slate-900'
+                : 'border-transparent text-slate-600 hover:text-slate-900'
+            }`}
+          >
+            <Cloud className="w-3.5 h-3.5 text-emerald-600" />
+            Conexión Supabase
+            {configured ? (
+              <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block ml-1" title="Configurado" />
+            ) : (
+              <span className="w-2 h-2 rounded-full bg-amber-500 inline-block ml-1" title="Pendiente de configurar" />
+            )}
+          </button>
           <button
             onClick={() => setTab('respaldo')}
-            className={`px-4 py-2 text-xs font-semibold rounded-t-md border-t border-x transition-colors flex items-center gap-1.5 cursor-pointer ${
+            className={`px-4 py-2 text-xs font-semibold rounded-t-md border-t border-x transition-colors flex items-center gap-1.5 cursor-pointer whitespace-nowrap ${
               tab === 'respaldo'
                 ? 'bg-white border-slate-200 text-slate-900'
                 : 'border-transparent text-slate-600 hover:text-slate-900'
             }`}
           >
             <HardDrive className="w-3.5 h-3.5 text-blue-600" />
-            Exportación de Datos y Respaldo JSON
+            Exportación y Respaldo JSON
           </button>
           <button
             onClick={() => setTab('sql')}
-            className={`px-4 py-2 text-xs font-semibold rounded-t-md border-t border-x transition-colors flex items-center gap-1.5 cursor-pointer ${
+            className={`px-4 py-2 text-xs font-semibold rounded-t-md border-t border-x transition-colors flex items-center gap-1.5 cursor-pointer whitespace-nowrap ${
               tab === 'sql'
                 ? 'bg-white border-slate-200 text-slate-900'
                 : 'border-transparent text-slate-600 hover:text-slate-900'
             }`}
           >
-            <FileCode2 className="w-3.5 h-3.5 text-emerald-600" />
-            Esquema Relacional PostgreSQL (`schema.sql`)
+            <FileCode2 className="w-3.5 h-3.5 text-indigo-600" />
+            Esquema Relacional (`schema.sql`)
           </button>
         </div>
 
-        {tab === 'respaldo' ? (
+        {/* Tab 1: Supabase */}
+        {tab === 'supabase' && (
+          <div className="p-6 space-y-6">
+            <div className="p-4 rounded-lg border border-slate-200 bg-slate-50 flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                    Estado de Configuración Supabase
+                  </span>
+                  {configured ? (
+                    <span className="px-2 py-0.5 text-[11px] font-semibold bg-emerald-100 text-emerald-800 rounded-full flex items-center gap-1">
+                      <CheckCircle2 className="w-3 h-3 text-emerald-600" /> Configurado en .env
+                    </span>
+                  ) : (
+                    <span className="px-2 py-0.5 text-[11px] font-semibold bg-amber-100 text-amber-800 rounded-full flex items-center gap-1">
+                      <AlertCircle className="w-3 h-3 text-amber-600" /> Falta configurar .env
+                    </span>
+                  )}
+                </div>
+                <p className="text-xs text-slate-600 font-mono">
+                  URL: {import.meta.env.VITE_SUPABASE_URL || 'No configurada (VITE_SUPABASE_URL)'}
+                </p>
+              </div>
+
+              <button
+                onClick={handleTestConnection}
+                disabled={isTesting}
+                className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white text-xs font-semibold rounded-md shadow-xs flex items-center gap-2 cursor-pointer whitespace-nowrap self-start md:self-auto"
+              >
+                <RefreshCw className={`w-3.5 h-3.5 ${isTesting ? 'animate-spin' : ''}`} />
+                {isTesting ? 'Probando conexión...' : 'Probar Conexión con Supabase'}
+              </button>
+            </div>
+
+            {testResult && (
+              <div
+                className={`p-4 rounded-lg border text-xs flex items-start gap-3 ${
+                  testResult.success
+                    ? 'bg-emerald-50 border-emerald-200 text-emerald-900'
+                    : 'bg-rose-50 border-rose-200 text-rose-900'
+                }`}
+              >
+                {testResult.success ? (
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                ) : (
+                  <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
+                )}
+                <div>
+                  <p className="font-semibold">{testResult.message}</p>
+                  {testResult.tableFound === false && (
+                    <p className="mt-1 text-[11px] text-emerald-700">
+                      Sugerencia: Ve a la pestaña <b>"Esquema Relacional"</b>, copia el script SQL y pégalo en el <b>SQL Editor</b> de tu panel de Supabase para inicializar las tablas con un clic.
+                    </p>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Guía rápida de configuración */}
+            <div className="border border-slate-200 rounded-lg p-5 bg-white space-y-4">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-2">
+                Pasos para vincular tu proyecto existente de Supabase:
+              </h4>
+
+              <ol className="text-xs text-slate-600 space-y-3 list-decimal list-inside leading-relaxed">
+                <li>
+                  Abre tu archivo <code className="px-1.5 py-0.5 bg-slate-100 rounded text-slate-800 font-mono">.env</code> en la raíz del proyecto.
+                </li>
+                <li>
+                  Ingresa las credenciales de tu proyecto de Supabase (desde <i>Project Settings → API</i>):
+                  <pre className="bg-slate-900 text-emerald-400 p-3 rounded mt-1.5 font-mono text-[11px] overflow-x-auto">
+                    VITE_SUPABASE_URL=https://xxxxxxxxxxxxxxxx.supabase.co{'\n'}
+                    VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+                  </pre>
+                </li>
+                <li>
+                  Crea las 16 tablas y políticas de seguridad (RLS) en Supabase:
+                  <div className="mt-1 pl-4 text-slate-500">
+                    Copia el contenido de la pestaña <b>Esquema Relacional (`schema.sql`)</b> y pégalo en el <b>SQL Editor</b> de Supabase, luego presiona <b>Run</b>.
+                  </div>
+                </li>
+              </ol>
+            </div>
+          </div>
+        )}
+
+        {/* Tab 2: Respaldo */}
+        {tab === 'respaldo' && (
           <div className="p-6 space-y-6">
             {/* Database Record Counters */}
             <div className="grid grid-cols-2 sm:grid-cols-6 gap-3">
@@ -163,7 +302,15 @@ export const DatabaseConfigModal: React.FC<DatabaseConfigModalProps> = ({
               </div>
               <div className="p-3 bg-slate-50 border border-slate-200 rounded-md">
                 <span className="text-[10px] font-bold uppercase text-slate-400 block">
-                  Inventarios
+                  Auditoría
+                </span>
+                <span className="text-lg font-bold font-mono text-slate-900 tabular-nums">
+                  {snapshot.auditLogs.length}
+                </span>
+              </div>
+              <div className="p-3 bg-slate-50 border border-slate-200 rounded-md">
+                <span className="text-[10px] font-bold uppercase text-slate-400 block">
+                  Campañas
                 </span>
                 <span className="text-lg font-bold font-mono text-slate-900 tabular-nums">
                   {snapshot.inventories.length}
@@ -177,48 +324,64 @@ export const DatabaseConfigModal: React.FC<DatabaseConfigModalProps> = ({
                   {snapshot.incidents.length}
                 </span>
               </div>
-              <div className="p-3 bg-slate-50 border border-slate-200 rounded-md">
-                <span className="text-[10px] font-bold uppercase text-slate-400 block">
-                  Auditoría
-                </span>
-                <span className="text-lg font-bold font-mono text-slate-900 tabular-nums">
-                  {snapshot.auditLogs.length}
-                </span>
-              </div>
             </div>
 
-            {/* Direct CSV Export */}
-            <div className="p-4 bg-slate-50 border border-slate-200 rounded-lg flex flex-wrap items-center justify-between gap-3">
-              <div>
-                <h4 className="text-xs font-bold uppercase tracking-wider text-slate-700">
-                  Planilla Consolidada de Envíos y Recepciones (Excel CSV)
-                </h4>
-                <p className="text-xs text-slate-500 mt-0.5">
-                  Descargue el reporte completo con estado de envíos, remitos, receptores y validación de evidencias.
+            {/* Actions Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {/* Export JSON */}
+              <div className="p-4 border border-slate-200 rounded-lg space-y-2 bg-white">
+                <div className="flex items-center gap-2">
+                  <Download className="w-4 h-4 text-blue-600" />
+                  <h4 className="text-xs font-bold text-slate-900">
+                    Exportar Respaldo Completo (JSON)
+                  </h4>
+                </div>
+                <p className="text-xs text-slate-500">
+                  Descarga un archivo con toda la información local de activos, envíos, auditoría y catálogos.
                 </p>
-              </div>
-              <button
-                onClick={() => downloadShipmentsCsv(snapshot.shipments)}
-                className="px-3.5 py-2 bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-semibold rounded-md flex items-center gap-1.5 cursor-pointer"
-              >
-                <FileSpreadsheet className="w-3.5 h-3.5" />
-                Exportar Envíos a Excel (.CSV)
-              </button>
-            </div>
-
-            {/* Full Backup / Restore JSON */}
-            <div className="pt-2 border-t border-slate-200 flex flex-wrap items-center justify-between gap-3">
-              <div className="flex flex-wrap items-center gap-2.5">
                 <button
                   onClick={handleExportJSON}
-                  className="px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-md flex items-center gap-1.5 cursor-pointer"
+                  className="w-full mt-2 px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-md shadow-xs flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <Download className="w-3.5 h-3.5" />
-                  Descargar Respaldo Completo (.JSON)
+                  Descargar Respaldo JSON
                 </button>
-                <label className="px-3.5 py-2 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 text-xs font-semibold rounded-md flex items-center gap-1.5 cursor-pointer">
-                  <Upload className="w-3.5 h-3.5 text-blue-600" />
-                  Restaurar desde Respaldo (.JSON)
+              </div>
+
+              {/* Export CSV */}
+              <div className="p-4 border border-slate-200 rounded-lg space-y-2 bg-white">
+                <div className="flex items-center gap-2">
+                  <FileSpreadsheet className="w-4 h-4 text-emerald-600" />
+                  <h4 className="text-xs font-bold text-slate-900">
+                    Reporte de Envíos en CSV (Excel)
+                  </h4>
+                </div>
+                <p className="text-xs text-slate-500">
+                  Exporta la planilla de órdenes de despacho con formato compatible para Microsoft Excel y Google Sheets.
+                </p>
+                <button
+                  onClick={() => downloadShipmentsCsv(snapshot.shipments)}
+                  className="w-full mt-2 px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-md shadow-xs flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  <Download className="w-3.5 h-3.5" />
+                  Descargar Reporte Envíos CSV
+                </button>
+              </div>
+
+              {/* Import JSON */}
+              <div className="p-4 border border-slate-200 rounded-lg space-y-2 bg-white">
+                <div className="flex items-center gap-2">
+                  <Upload className="w-4 h-4 text-indigo-600" />
+                  <h4 className="text-xs font-bold text-slate-900">
+                    Restaurar Respaldo (JSON)
+                  </h4>
+                </div>
+                <p className="text-xs text-slate-500">
+                  Carga un archivo de respaldo generado previamente para restaurar el estado completo.
+                </p>
+                <label className="w-full mt-2 px-3 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-md shadow-xs flex items-center justify-center gap-2 cursor-pointer">
+                  <Upload className="w-3.5 h-3.5" />
+                  Seleccionar Archivo JSON
                   <input
                     type="file"
                     accept=".json"
@@ -226,12 +389,25 @@ export const DatabaseConfigModal: React.FC<DatabaseConfigModalProps> = ({
                     className="hidden"
                   />
                 </label>
+              </div>
+
+              {/* Factory Reset */}
+              <div className="p-4 border border-rose-200 rounded-lg space-y-2 bg-rose-50/50">
+                <div className="flex items-center gap-2">
+                  <RotateCcw className="w-4 h-4 text-rose-600" />
+                  <h4 className="text-xs font-bold text-rose-900">
+                    Restablecer Datos de Demostración
+                  </h4>
+                </div>
+                <p className="text-xs text-rose-700">
+                  Borra las modificaciones locales y recarga el conjunto de datos de prueba corporativo.
+                </p>
                 <button
                   onClick={onResetFactory}
-                  className="px-3.5 py-2 bg-white border border-rose-200 hover:bg-rose-50 text-rose-700 text-xs font-semibold rounded-md flex items-center gap-1.5 cursor-pointer"
+                  className="w-full mt-2 px-3 py-2 bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold rounded-md shadow-xs flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <RotateCcw className="w-3.5 h-3.5" />
-                  Restablecer Datos Iniciales
+                  Restablecer a Valores de Fábrica
                 </button>
               </div>
             </div>
@@ -242,7 +418,10 @@ export const DatabaseConfigModal: React.FC<DatabaseConfigModalProps> = ({
               </div>
             )}
           </div>
-        ) : (
+        )}
+
+        {/* Tab 3: SQL */}
+        {tab === 'sql' && (
           <div className="p-6 space-y-4">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
@@ -250,7 +429,7 @@ export const DatabaseConfigModal: React.FC<DatabaseConfigModalProps> = ({
                   Script DDL PostgreSQL / Supabase (16 Tablas, Triggers Append-Only y RLS)
                 </h4>
                 <p className="text-xs text-slate-500">
-                  Ejecute este script en su instancia PostgreSQL para crear la estructura relacional corporativa.
+                  Ejecute este script en el SQL Editor de Supabase o en su instancia PostgreSQL para crear la estructura relacional corporativa.
                 </p>
               </div>
               <div className="flex items-center gap-2">
