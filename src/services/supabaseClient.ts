@@ -1,7 +1,10 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
+const supabaseUrl =
+  import.meta.env.VITE_SUPABASE_URL || 'https://gumfbdcfjfhpqtttlsbw.supabase.co';
+const supabaseAnonKey =
+  import.meta.env.VITE_SUPABASE_ANON_KEY ||
+  'sb_publishable_NHMpuCIW7vA2Xi4iIFhirw_-3Eo72E2';
 
 export const isSupabaseConfigured = (): boolean => {
   return Boolean(
@@ -33,30 +36,34 @@ export async function testSupabaseConnection(): Promise<{
   if (!isSupabaseConfigured() || !supabase) {
     return {
       success: false,
-      message: 'Supabase no está configurado. Asegúrate de configurar VITE_SUPABASE_URL y VITE_SUPABASE_ANON_KEY en tu archivo .env',
+      message:
+        'Supabase no está configurado. Asegúrate de configurar VITE_SUPABASE_URL y VITE_SUPABASE_ANON_KEY en tu archivo .env',
     };
   }
 
   try {
     const startTime = performance.now();
     // Intenta consultar la tabla de países del esquema DDL
-    const { data, error } = await supabase.from('paises').select('codigo_iso, nombre').limit(5);
+    const { data, error } = await supabase
+      .from('paises')
+      .select('codigo_iso, nombre')
+      .limit(5);
     const latency = Math.round(performance.now() - startTime);
 
     if (error) {
-      // Si la tabla aún no fue creada mediante el script SQL DDL
-      if (error.code === '42P01') {
+      // Si la tabla aún no fue creada mediante el script SQL DDL (42P01 en postgres o PGRST205 en PostgREST)
+      if (error.code === '42P01' || error.code === 'PGRST205') {
         return {
           success: true,
           tableFound: false,
           url: supabaseUrl,
-          message: `Conectado exitosamente con Supabase (${latency}ms). Nota: La tabla 'paises' aún no existe. Ejecuta el script SQL DDL en el SQL Editor de Supabase.`,
+          message: `¡Conexión exitosa con Supabase (${latency}ms)! Tus credenciales son válidas y el servidor respondió correctamente. Solo falta ejecutar el script SQL en el SQL Editor de Supabase.`,
         };
       }
       return {
         success: false,
         url: supabaseUrl,
-        message: `Error al conectar con Supabase: ${error.message} (${error.code || 'Desconocido'})`,
+        message: `Respuesta de Supabase: ${error.message} (Código: ${error.code || 'N/A'})`,
       };
     }
 
@@ -74,4 +81,3 @@ export async function testSupabaseConnection(): Promise<{
     };
   }
 }
-
