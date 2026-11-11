@@ -18,6 +18,7 @@ export interface UserAccount {
   organizacion: string;
   transportista_id?: string;
   activo: boolean;
+  password?: string;
 }
 
 export type AssetStatus =

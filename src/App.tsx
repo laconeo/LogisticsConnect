@@ -20,6 +20,7 @@ import {
   Download,
   LogOut,
   UserCheck,
+  UserPlus,
   X,
   Menu,
   Phone,
@@ -64,6 +65,8 @@ import { AssetsAndCatalogModule } from './components/AssetsAndCatalogModule';
 import { TraceabilityAndAuditModule } from './components/TraceabilityAndAuditModule';
 import { InventoryAndIncidentsModule } from './components/InventoryAndIncidentsModule';
 import { DatabaseConfigModal } from './components/DatabaseConfigModal';
+import { LoginScreen } from './components/LoginScreen';
+import { UserManagementModal } from './components/UserManagementModal';
 
 type ActiveModule =
   | 'torre_control'
@@ -171,10 +174,13 @@ export default function App() {
   const [currentUserId, setCurrentUserId] = useState<string>(
     initialDb.currentUserId || INITIAL_USERS[0].id
   );
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(true);
-  const [loginCorreo, setLoginCorreo] = useState<string>(INITIAL_USERS[0].correo);
-  const [loginPassword, setLoginPassword] = useState<string>('fs2026');
-  const [loginError, setLoginError] = useState<string | null>(null);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(() => {
+    return (
+      localStorage.getItem('lc_auth_logged_in') === 'true' ||
+      sessionStorage.getItem('lc_auth_logged_in') === 'true'
+    );
+  });
+  const [showUserModal, setShowUserModal] = useState<boolean>(false);
 
   // Navigation & Mobile Drawer State
   const [activeModule, setActiveModule] = useState<ActiveModule>('torre_control');
@@ -1128,18 +1134,81 @@ export default function App() {
     setShowDbModal(false);
   };
 
-  const handleLoginSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const matched = users.find(
-      (u) => u.correo.toLowerCase() === loginCorreo.trim().toLowerCase()
-    );
-    if (!matched || loginPassword.trim().length < 4) {
-      setLoginError('Credenciales inválidas. Seleccione una cuenta autorizada.');
-      return;
-    }
-    handleSelectUserAccount(matched.id);
+  const handleLogin = (user: UserAccount, remember: boolean) => {
+    handleSelectUserAccount(user.id);
     setIsLoggedIn(true);
-    setLoginError(null);
+    if (remember) {
+      localStorage.setItem('lc_auth_logged_in', 'true');
+      localStorage.setItem('lc_auth_user_id', user.id);
+    } else {
+      sessionStorage.setItem('lc_auth_logged_in', 'true');
+      sessionStorage.setItem('lc_auth_user_id', user.id);
+    }
+  };
+
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    localStorage.removeItem('lc_auth_logged_in');
+    localStorage.removeItem('lc_auth_user_id');
+    sessionStorage.removeItem('lc_auth_logged_in');
+    sessionStorage.removeItem('lc_auth_user_id');
+  };
+
+  const handleAddUser = (newUser: UserAccount) => {
+    const updatedUsers = [...users, newUser];
+    setUsers(updatedUsers);
+    DatabaseRepository.saveUsers(updatedUsers);
+
+    // Registro inmutable de auditoría forense
+    const auditEntry: AuditLogEntry = {
+      id: `AUD-${Date.now()}`,
+      fecha_utc: new Date().toISOString(),
+      usuario_id: currentUser.id,
+      usuario_nombre: currentUser.nombre,
+      accion: 'ALTA_USUARIO',
+      entidad_afectada: 'USUARIO',
+      entidad_id: newUser.id,
+      detalles: {
+        nombre: newUser.nombre,
+        correo: newUser.correo,
+        rol: newUser.rol,
+        rol_etiqueta: newUser.rol_etiqueta,
+        pais: newUser.pais,
+        organizacion: newUser.organizacion,
+        ambito: newUser.ambito,
+        administrador_autorizante: currentUser.nombre,
+      },
+      ip_origen: '127.0.0.1',
+      pais_iso: currentUser.pais,
+    };
+    setAuditLogs((prev) => [auditEntry, ...prev]);
+  };
+
+  const handleToggleUserStatus = (userId: string) => {
+    const targetUser = users.find((u) => u.id === userId);
+    if (!targetUser) return;
+    const updatedUsers = users.map((u) =>
+      u.id === userId ? { ...u, activo: !u.activo } : u
+    );
+    setUsers(updatedUsers);
+    DatabaseRepository.saveUsers(updatedUsers);
+
+    const auditEntry: AuditLogEntry = {
+      id: `AUD-${Date.now()}`,
+      fecha_utc: new Date().toISOString(),
+      usuario_id: currentUser.id,
+      usuario_nombre: currentUser.nombre,
+      accion: targetUser.activo ? 'DESACTIVAR_USUARIO' : 'ACTIVAR_USUARIO',
+      entidad_afectada: 'USUARIO',
+      entidad_id: targetUser.id,
+      detalles: {
+        usuario_modificado: targetUser.nombre,
+        estado_nuevo: !targetUser.activo ? 'ACTIVO' : 'INACTIVO',
+      },
+      ip_origen: '127.0.0.1',
+      pais_iso: currentUser.pais,
+    };
+    setAuditLogs((prev) => [auditEntry, ...prev]);
   };
 
   const renderStateIndicator = (state: ShipmentStatus) => {
@@ -1190,70 +1259,7 @@ export default function App() {
   };
 
   if (!isLoggedIn) {
-    return (
-      <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4">
-        <div className="bg-white border border-slate-200 rounded-lg max-w-md w-full p-6 shadow-xl space-y-6">
-          <div className="flex items-center gap-3 border-b border-slate-100 pb-4">
-            <div className="w-10 h-10 rounded-md bg-blue-600 flex items-center justify-center text-white font-bold">
-              <Truck className="w-5 h-5" />
-            </div>
-            <div>
-              <h1 className="text-base font-bold text-slate-900">
-                Logistics Connect
-              </h1>
-              <p className="text-xs text-slate-500">
-                Gestión y Trazabilidad de Activos · Área Sudamérica Sur
-              </p>
-            </div>
-          </div>
-
-          <form onSubmit={handleLoginSubmit} className="space-y-4">
-            <div>
-              <label className="block text-[11px] font-semibold uppercase tracking-wider text-slate-600 mb-1">
-                Cuenta Operativa Autorizada
-              </label>
-              <select
-                value={loginCorreo}
-                onChange={(e) => setLoginCorreo(e.target.value)}
-                className="w-full px-3 py-2.5 text-xs bg-slate-50 border border-slate-300 rounded-md focus:bg-white focus:outline-none focus:border-blue-600"
-              >
-                {users.map((u) => (
-                  <option key={u.id} value={u.correo}>
-                    {u.nombre} ({u.rol_etiqueta}) — {u.correo}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-[11px] font-semibold uppercase tracking-wider text-slate-600 mb-1">
-                Contraseña / Credencial de Acceso
-              </label>
-              <input
-                type="password"
-                required
-                value={loginPassword}
-                onChange={(e) => setLoginPassword(e.target.value)}
-                className="w-full px-3 py-2.5 text-xs bg-slate-50 border border-slate-300 rounded-md focus:bg-white focus:outline-none focus:border-blue-600 font-mono"
-              />
-            </div>
-
-            {loginError && (
-              <div className="p-2.5 bg-rose-50 border border-rose-200 text-rose-700 text-xs rounded">
-                {loginError}
-              </div>
-            )}
-
-            <button
-              type="submit"
-              className="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-md transition-colors cursor-pointer"
-            >
-              Ingresar a la Plataforma
-            </button>
-          </form>
-        </div>
-      </div>
-    );
+    return <LoginScreen users={users} onLogin={handleLogin} />;
   }
 
   return (
@@ -1350,6 +1356,17 @@ export default function App() {
               </select>
             </div>
 
+            {currentUser.rol === 'ADMIN_REGIONAL' && (
+              <button
+                onClick={() => setShowUserModal(true)}
+                className="px-2.5 py-1.5 rounded-md border border-rose-500/60 bg-rose-950/70 hover:bg-rose-900 text-xs font-semibold text-rose-200 flex items-center gap-1.5 whitespace-nowrap shrink-0 cursor-pointer shadow-xs"
+                title="Gestión y Alta de Usuarios (Módulo exclusivo Administrador Regional)"
+              >
+                <UserPlus className="w-3.5 h-3.5 text-rose-400" />
+                <span className="hidden sm:inline">Alta Usuarios</span>
+              </button>
+            )}
+
             {activeRolePerms.canManageDb && (
               <button
                 onClick={() => setShowDbModal(true)}
@@ -1362,7 +1379,7 @@ export default function App() {
             )}
 
             <button
-              onClick={() => setIsLoggedIn(false)}
+              onClick={handleLogout}
               className="p-1.5 rounded-md border border-slate-700 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white cursor-pointer"
               title="Cerrar sesión"
             >
@@ -1491,6 +1508,27 @@ export default function App() {
                   </button>
                 );
               })}
+
+              {currentUser.rol === 'ADMIN_REGIONAL' && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowUserModal(true);
+                    setMobileMenuOpen(false);
+                  }}
+                  className="w-full p-3 rounded-lg border border-rose-800 bg-rose-950/70 hover:bg-rose-900/80 text-rose-200 text-left flex items-center justify-between"
+                >
+                  <div className="flex items-center gap-3">
+                    <UserPlus className="w-4 h-4 text-rose-400 shrink-0" />
+                    <div>
+                      <div className="text-xs font-bold">Gestión y Alta de Usuarios</div>
+                      <div className="text-[11px] text-rose-300">
+                        Solo perfil Administrador Regional
+                      </div>
+                    </div>
+                  </div>
+                </button>
+              )}
             </div>
           </div>
         )}
@@ -2362,6 +2400,17 @@ export default function App() {
           onImportSnapshot={handleImportSnapshot}
           onResetFactory={handleResetFactory}
           onClose={() => setShowDbModal(false)}
+        />
+      )}
+
+      {/* Modal: Gestión y Alta de Usuarios (Exclusivo Administrador Regional) */}
+      {showUserModal && currentUser.rol === 'ADMIN_REGIONAL' && (
+        <UserManagementModal
+          currentUser={currentUser}
+          users={users}
+          onAddUser={handleAddUser}
+          onToggleUserStatus={handleToggleUserStatus}
+          onClose={() => setShowUserModal(false)}
         />
       )}
     </div>
