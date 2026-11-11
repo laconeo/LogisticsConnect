@@ -141,12 +141,12 @@ export const DatabaseConfigModal: React.FC<DatabaseConfigModalProps> = ({
   const configured = isSupabaseConfigured();
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
-      <div className="bg-white border border-slate-200 rounded-lg max-w-4xl w-full overflow-hidden shadow-xl my-8">
+    <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+      <div className="bg-white border border-slate-200 rounded-xl max-w-4xl w-full overflow-hidden shadow-2xl my-auto max-h-[92vh] flex flex-col">
         {/* Header */}
-        <div className="px-6 py-4 bg-slate-900 text-white flex items-center justify-between">
+        <div className="px-5 sm:px-6 py-4 bg-slate-900 text-white flex items-center justify-between shrink-0">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded bg-blue-600 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center shrink-0">
               <Database className="w-4 h-4 text-white" />
             </div>
             <div>
@@ -162,12 +162,12 @@ export const DatabaseConfigModal: React.FC<DatabaseConfigModalProps> = ({
             onClick={onClose}
             className="p-1.5 text-slate-400 hover:text-white rounded-md cursor-pointer"
           >
-            <X className="w-4 h-4" />
+            <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Sub-tabs */}
-        <div className="px-6 pt-3 bg-slate-100 border-b border-slate-200 flex items-center gap-2 overflow-x-auto">
+        <div className="px-4 sm:px-6 pt-2 bg-slate-100 border-b border-slate-200 flex items-center gap-1.5 overflow-x-auto shrink-0 no-scrollbar">
           <button
             onClick={() => setTab('supabase')}
             className={`px-4 py-2 text-xs font-semibold rounded-t-md border-t border-x transition-colors flex items-center gap-1.5 cursor-pointer whitespace-nowrap ${
@@ -210,7 +210,7 @@ export const DatabaseConfigModal: React.FC<DatabaseConfigModalProps> = ({
 
         {/* Tab 1: Supabase */}
         {tab === 'supabase' && (
-          <div className="p-6 space-y-6">
+          <div className="p-4 sm:p-6 space-y-5 overflow-y-auto">
             <div className="p-4 rounded-lg border border-slate-200 bg-slate-50 flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
@@ -336,7 +336,7 @@ export const DatabaseConfigModal: React.FC<DatabaseConfigModalProps> = ({
 
         {/* Tab 2: Respaldo */}
         {tab === 'respaldo' && (
-          <div className="p-6 space-y-6">
+          <div className="p-4 sm:p-6 space-y-5 overflow-y-auto">
             {/* Database Record Counters */}
             <div className="grid grid-cols-2 sm:grid-cols-6 gap-3">
               <div className="p-3 bg-slate-50 border border-slate-200 rounded-md">
@@ -485,7 +485,7 @@ export const DatabaseConfigModal: React.FC<DatabaseConfigModalProps> = ({
 
         {/* Tab 3: SQL */}
         {tab === 'sql' && (
-          <div className="p-6 space-y-4">
+          <div className="p-4 sm:p-6 space-y-4 overflow-y-auto">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
                 <h4 className="text-sm font-bold text-slate-900">

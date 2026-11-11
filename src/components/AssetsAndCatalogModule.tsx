@@ -47,6 +47,7 @@ export const AssetsAndCatalogModule: React.FC<AssetsAndCatalogModuleProps> = ({
   const [selectedAssetId, setSelectedAssetId] = useState<string>(
     assets[0]?.id || 'CFS-CL-063'
   );
+  const [mobileAssetTab, setMobileAssetTab] = useState<'lista' | 'detalle'>('lista');
 
   // Register new asset state
   const [selectedTypeId, setSelectedTypeId] = useState<string>(
@@ -182,126 +183,173 @@ export const AssetsAndCatalogModule: React.FC<AssetsAndCatalogModuleProps> = ({
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       {/* Sub-navigation bar */}
-      <div className="bg-white border border-slate-200 rounded-xl p-4 flex flex-wrap items-center justify-between gap-4">
-        <div className="flex items-center gap-1 p-1 bg-slate-100 rounded-lg">
+      <div className="bg-white border border-slate-200 rounded-xl p-3 sm:p-4 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 shadow-xs">
+        <div className="grid grid-cols-3 sm:flex items-center gap-1 p-1 bg-slate-100 rounded-lg">
           <button
             onClick={() => setSubView('INVENTARIO')}
-            className={`px-3.5 py-1.5 text-xs font-semibold rounded-md transition-colors cursor-pointer whitespace-nowrap ${
+            className={`px-2.5 sm:px-3.5 py-1.5 text-[11px] sm:text-xs font-semibold rounded-md transition-colors cursor-pointer text-center truncate ${
               subView === 'INVENTARIO'
                 ? 'bg-white text-slate-900 shadow-xs'
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
-            Directorio de Activos y Contenedores
+            <span className="sm:hidden">Activos</span>
+            <span className="hidden sm:inline">Directorio de Activos</span>
           </button>
           <button
             onClick={() => setSubView('ALTA_ACTIVO')}
-            className={`px-3.5 py-1.5 text-xs font-semibold rounded-md transition-colors cursor-pointer whitespace-nowrap ${
+            className={`px-2.5 sm:px-3.5 py-1.5 text-[11px] sm:text-xs font-semibold rounded-md transition-colors cursor-pointer text-center truncate ${
               subView === 'ALTA_ACTIVO'
                 ? 'bg-white text-slate-900 shadow-xs'
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
-            + Registrar Nuevo Activo
+            <span className="sm:hidden">+ Alta</span>
+            <span className="hidden sm:inline">+ Registrar Nuevo Activo</span>
           </button>
           <button
             onClick={() => setSubView('TIPOS_ACTIVO')}
-            className={`px-3.5 py-1.5 text-xs font-semibold rounded-md transition-colors cursor-pointer whitespace-nowrap ${
+            className={`px-2.5 sm:px-3.5 py-1.5 text-[11px] sm:text-xs font-semibold rounded-md transition-colors cursor-pointer text-center truncate ${
               subView === 'TIPOS_ACTIVO'
                 ? 'bg-white text-slate-900 shadow-xs'
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
-            Configuración de Tipos de Activo
+            <span className="sm:hidden">Tipos</span>
+            <span className="hidden sm:inline">Configuración de Tipos</span>
           </button>
         </div>
 
         <button
           onClick={() => onOpenQrBatchModal(assets)}
-          className="px-3.5 py-2 text-xs font-semibold text-white bg-slate-900 hover:bg-slate-800 rounded-lg flex items-center gap-1.5 cursor-pointer whitespace-nowrap"
+          className="px-3.5 py-2 text-xs font-semibold text-white bg-slate-900 hover:bg-slate-800 rounded-lg flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap shadow-xs"
         >
           <QrCode className="w-4 h-4" />
-          Imprimir Etiquetas QR ({assets.length})
+          <span>Imprimir QR ({assets.length})</span>
         </button>
       </div>
 
       {/* VIEW 1: DIRECTORIO DE ACTIVOS */}
       {subView === 'INVENTARIO' && (
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-          {/* Asset List */}
-          <div className="lg:col-span-7 bg-white border border-slate-200 rounded-xl overflow-hidden">
-            <div className="px-5 py-3.5 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
-              <div className="text-xs font-semibold text-slate-800 flex items-center gap-2">
-                <Box className="w-4 h-4 text-blue-700" />
-                Activos Registrados ({assets.length})
+        <div className="space-y-4">
+          {/* Mobile Switcher between Lista and Ficha */}
+          <div className="lg:hidden flex items-center bg-slate-100 p-1 rounded-lg text-xs font-semibold">
+            <button
+              type="button"
+              onClick={() => setMobileAssetTab('lista')}
+              className={`flex-1 py-2 text-center rounded-md transition-all ${
+                mobileAssetTab === 'lista'
+                  ? 'bg-white text-slate-900 shadow-xs font-bold'
+                  : 'text-slate-600'
+              }`}
+            >
+              Lista de Activos ({assets.length})
+            </button>
+            <button
+              type="button"
+              onClick={() => setMobileAssetTab('detalle')}
+              className={`flex-1 py-2 text-center rounded-md transition-all ${
+                mobileAssetTab === 'detalle'
+                  ? 'bg-white text-slate-900 shadow-xs font-bold'
+                  : 'text-slate-600'
+              }`}
+            >
+              Ficha: {activeAsset?.id || 'Detalle'}
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            {/* Asset List */}
+            <div
+              className={`lg:col-span-7 bg-white border border-slate-200 rounded-xl overflow-hidden shadow-xs ${
+                mobileAssetTab === 'detalle' ? 'hidden lg:block' : 'block'
+              }`}
+            >
+              <div className="px-4 sm:px-5 py-3 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
+                <div className="text-xs font-semibold text-slate-800 flex items-center gap-2">
+                  <Box className="w-4 h-4 text-blue-700" />
+                  Activos Registrados ({assets.length})
+                </div>
+                <span className="text-[11px] text-slate-500 hidden sm:inline">
+                  Seleccione un activo para ver su ficha y componentes
+                </span>
               </div>
-              <span className="text-[11px] text-slate-500">
-                Seleccione un activo para ver su ficha y componentes
-              </span>
-            </div>
 
-            <div className="divide-y divide-slate-200">
-              {assets.map((asset) => {
-                const isSelected = asset.id === activeAsset?.id;
-                return (
-                  <div
-                    key={asset.id}
-                    onClick={() => setSelectedAssetId(asset.id)}
-                    className={`p-4 transition-colors cursor-pointer ${
-                      isSelected ? 'bg-blue-50/60' : 'hover:bg-slate-50'
-                    }`}
-                  >
-                    <div className="flex items-start justify-between gap-3">
-                      <div>
-                        <div className="flex items-center gap-2 text-xs">
-                          <span className="font-mono font-bold text-slate-900">
-                            {asset.id}
-                          </span>
-                          <span aria-hidden="true" className="text-slate-400">
-                            ·
-                          </span>
-                          <span className="font-medium text-slate-700">
-                            {asset.tipo_nombre}
-                          </span>
-                          <span aria-hidden="true" className="text-slate-400">
-                            ·
-                          </span>
-                          <span className="font-mono text-slate-500">
-                            SN: {asset.serial}
-                          </span>
+              <div className="divide-y divide-slate-100">
+                {assets.map((asset) => {
+                  const isSelected = asset.id === activeAsset?.id;
+                  return (
+                    <div
+                      key={asset.id}
+                      onClick={() => {
+                        setSelectedAssetId(asset.id);
+                        setMobileAssetTab('detalle');
+                      }}
+                      className={`p-3.5 sm:p-4 transition-colors cursor-pointer ${
+                        isSelected ? 'bg-blue-50/70' : 'hover:bg-slate-50'
+                      }`}
+                    >
+                      <div className="flex items-start justify-between gap-2.5">
+                        <div className="min-w-0">
+                          <div className="flex flex-wrap items-center gap-1.5 text-xs">
+                            <span className="font-mono font-bold text-slate-900">
+                              {asset.id}
+                            </span>
+                            <span aria-hidden="true" className="text-slate-300">
+                              ·
+                            </span>
+                            <span className="font-medium text-slate-700 truncate">
+                              {asset.tipo_nombre}
+                            </span>
+                          </div>
+                          <div className="text-xs text-slate-600 mt-1 truncate">
+                            Ubicación: <strong className="text-slate-800">{asset.ubicacion_actual}</strong>
+                          </div>
+                          <div className="text-[11px] text-slate-500 mt-0.5 truncate">
+                            Custodio: {asset.custodio_actual}
+                          </div>
                         </div>
-                        <div className="text-xs text-slate-600 mt-1">
-                          Ubicación actual:{' '}
-                          <strong className="text-slate-800">
-                            {asset.ubicacion_actual}
-                          </strong>
-                        </div>
-                        <div className="text-xs text-slate-500 mt-0.5">
-                          Custodio responsable: {asset.custodio_actual}
-                        </div>
-                      </div>
 
-                      <div className="text-right shrink-0 space-y-1">
-                        <div className="text-xs font-semibold text-slate-900">
-                          {asset.estado}
-                        </div>
-                        <div className="text-xs font-mono tabular-nums text-slate-600">
-                          ${asset.valor_declarado_clp.toLocaleString('es-CL')}{' '}
-                          CLP
+                        <div className="text-right shrink-0 space-y-1">
+                          <div className="text-[11px] font-semibold text-slate-900">
+                            {asset.estado}
+                          </div>
+                          <div className="text-[11px] font-mono tabular-nums text-slate-600">
+                            ${asset.valor_declarado_clp.toLocaleString('es-CL')} CLP
+                          </div>
+                          <div className="lg:hidden text-[10px] text-blue-600 font-bold mt-1">
+                            Ver ficha →
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </div>
             </div>
-          </div>
 
           {/* Selected Asset Detail */}
           {activeAsset && (
-            <div className="lg:col-span-5 bg-white border border-slate-200 rounded-xl p-5 space-y-5">
+            <div
+              className={`lg:col-span-5 bg-white border border-slate-200 rounded-xl p-4 sm:p-5 space-y-5 shadow-xs ${
+                mobileAssetTab === 'lista' ? 'hidden lg:block' : 'block'
+              }`}
+            >
+              <div className="lg:hidden pb-3 border-b border-slate-100 flex items-center justify-between">
+                <button
+                  type="button"
+                  onClick={() => setMobileAssetTab('lista')}
+                  className="text-xs font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1 cursor-pointer"
+                >
+                  ← Volver a lista de activos
+                </button>
+                <span className="text-[11px] font-mono text-slate-400">
+                  {assets.findIndex((a) => a.id === activeAsset.id) + 1} de {assets.length}
+                </span>
+              </div>
+
               <div className="flex items-start justify-between gap-4 border-b border-slate-200 pb-4">
                 <div>
                   <div className="text-xs font-mono text-blue-700 font-semibold">
@@ -529,6 +577,7 @@ export const AssetsAndCatalogModule: React.FC<AssetsAndCatalogModuleProps> = ({
               )}
             </div>
           )}
+          </div>
         </div>
       )}
 
@@ -677,7 +726,7 @@ export const AssetsAndCatalogModule: React.FC<AssetsAndCatalogModuleProps> = ({
 
             <button
               type="submit"
-              className="px-5 py-2.5 text-xs font-semibold text-white bg-blue-700 hover:bg-blue-800 rounded-lg flex items-center gap-2 cursor-pointer"
+              className="px-5 py-2.5 text-xs font-semibold text-white bg-blue-700 hover:bg-blue-800 rounded-lg flex items-center gap-2 cursor-pointer shadow-xs"
             >
               <Plus className="w-4 h-4" />
               Registrar Activo y Generar Etiqueta QR

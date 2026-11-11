@@ -31,3 +31,4 @@ ALTER TABLE ordenes_envio ADD CONSTRAINT ordenes_envio_estado_revision_evidencia
 -- 5. Agregar columnas auxiliares de respaldo si hiciera falta
 ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS organizacion VARCHAR(160);
 ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS transportista_id VARCHAR(40);
+

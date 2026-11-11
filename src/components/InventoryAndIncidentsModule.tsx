@@ -116,43 +116,49 @@ export const InventoryAndIncidentsModule: React.FC<InventoryAndIncidentsModulePr
   );
 
   return (
-    <div className="space-y-6">
-      {/* Sub-navigation */}
-      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200 pb-4">
-        <div className="flex items-center gap-2">
+    <div className="space-y-5">
+      {/* Sub-navigation Hallmark */}
+      <div className="bg-white border border-slate-200 rounded-xl p-3 sm:p-4 shadow-xs">
+        <div className="grid grid-cols-3 sm:flex items-center gap-1 p-1 bg-slate-100 rounded-lg">
           <button
             onClick={() => setSubTab('inventario')}
-            className={`px-3.5 py-2 rounded-md text-xs font-semibold transition-colors whitespace-nowrap shrink-0 flex items-center gap-2 cursor-pointer ${
+            className={`px-2 sm:px-3.5 py-1.5 text-[11px] sm:text-xs font-semibold rounded-md transition-colors cursor-pointer text-center truncate flex items-center justify-center gap-1.5 ${
               subTab === 'inventario'
-                ? 'bg-slate-900 text-white'
-                : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'
+                ? 'bg-white text-slate-900 shadow-xs'
+                : 'text-slate-600 hover:text-slate-900'
             }`}
           >
-            <ClipboardCheck className="w-3.5 h-3.5" />
-            Auditoría de Inventario Físico ({inventories.length})
+            <ClipboardCheck className="w-3.5 h-3.5 shrink-0" />
+            <span className="sm:hidden">Inventario</span>
+            <span className="hidden sm:inline">Auditoría Inventario ({inventories.length})</span>
           </button>
           <button
             onClick={() => setSubTab('incidentes')}
-            className={`px-3.5 py-2 rounded-md text-xs font-semibold transition-colors whitespace-nowrap shrink-0 flex items-center gap-2 cursor-pointer ${
+            className={`px-2 sm:px-3.5 py-1.5 text-[11px] sm:text-xs font-semibold rounded-md transition-colors cursor-pointer text-center truncate flex items-center justify-center gap-1.5 ${
               subTab === 'incidentes'
-                ? 'bg-slate-900 text-white'
-                : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'
+                ? 'bg-white text-slate-900 shadow-xs'
+                : 'text-slate-600 hover:text-slate-900'
             }`}
           >
-            <AlertTriangle className="w-3.5 h-3.5" />
-            Incidentes y Mantenciones (
-            {incidents.filter((i) => i.estado_gestion !== 'Cerrado').length} activos)
+            <AlertTriangle className="w-3.5 h-3.5 shrink-0 text-rose-600" />
+            <span className="sm:hidden">Incidentes</span>
+            <span className="hidden sm:inline">
+              Incidentes ({incidents.filter((i) => i.estado_gestion !== 'Cerrado').length})
+            </span>
           </button>
           <button
             onClick={() => setSubTab('territorio')}
-            className={`px-3.5 py-2 rounded-md text-xs font-semibold transition-colors whitespace-nowrap shrink-0 flex items-center gap-2 cursor-pointer ${
+            className={`px-2 sm:px-3.5 py-1.5 text-[11px] sm:text-xs font-semibold rounded-md transition-colors cursor-pointer text-center truncate flex items-center justify-center gap-1.5 ${
               subTab === 'territorio'
-                ? 'bg-slate-900 text-white'
-                : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'
+                ? 'bg-white text-slate-900 shadow-xs'
+                : 'text-slate-600 hover:text-slate-900'
             }`}
           >
-            <MapPin className="w-3.5 h-3.5" />
-            Catálogo Territorial Oficial ({CHILE_COMUNAS_CATALOG.length} comunas)
+            <MapPin className="w-3.5 h-3.5 shrink-0 text-blue-600" />
+            <span className="sm:hidden">Comunas</span>
+            <span className="hidden sm:inline">
+              Catálogo Comunas ({CHILE_COMUNAS_CATALOG.length})
+            </span>
           </button>
         </div>
       </div>

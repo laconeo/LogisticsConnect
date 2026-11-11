@@ -335,6 +335,9 @@ export const MobileFieldSimulator: React.FC<FieldOperationsViewProps> = ({
       | React.MouseEvent<HTMLCanvasElement>
       | React.TouchEvent<HTMLCanvasElement>
   ) => {
+    if ('touches' in e && e.cancelable) {
+      e.preventDefault();
+    }
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
@@ -355,6 +358,9 @@ export const MobileFieldSimulator: React.FC<FieldOperationsViewProps> = ({
       | React.TouchEvent<HTMLCanvasElement>
   ) => {
     if (!isDrawing) return;
+    if ('touches' in e && e.cancelable) {
+      e.preventDefault();
+    }
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
@@ -613,28 +619,29 @@ export const MobileFieldSimulator: React.FC<FieldOperationsViewProps> = ({
         {/* Right: Active Operational Form */}
         <div className="lg:col-span-8 bg-white border border-slate-200 rounded-xl overflow-hidden">
           {/* Visual 4-Step Operational Progress Bar */}
-          <div className="bg-slate-900 text-white px-4 py-3 border-b border-slate-800">
-            <div className="grid grid-cols-4 gap-1.5 text-[10px] sm:text-xs font-semibold">
+          <div className="bg-slate-900 text-white px-3 sm:px-4 py-2.5 sm:py-3 border-b border-slate-800">
+            <div className="grid grid-cols-4 gap-1 sm:gap-1.5 text-[10px] sm:text-xs font-semibold">
               {[
-                { step: 1, label: '1. Bodega' },
-                { step: 2, label: '2. Despacho' },
-                { step: 3, label: '3. Llegué GPS' },
-                { step: 4, label: '4. Fotos y Firma' },
+                { step: 1, short: '1. Bodega', full: '1. Armado Bodega' },
+                { step: 2, short: '2. Ruta', full: '2. Inicio Ruta' },
+                { step: 3, short: '3. Llegada', full: '3. Llegué GPS' },
+                { step: 4, short: '4. Firma', full: '4. Fotos y Firma' },
               ].map((s) => {
                 const isDone = currentStepIndex > s.step;
                 const isCurrent = currentStepIndex === s.step;
                 return (
                   <div
                     key={s.step}
-                    className={`py-1.5 px-2 rounded text-center truncate ${
+                    className={`py-1.5 px-1 sm:px-2 rounded-lg text-center truncate transition-colors ${
                       isDone
                         ? 'bg-emerald-600/30 text-emerald-300 border border-emerald-500/40'
                         : isCurrent
-                        ? 'bg-blue-600 text-white font-bold'
+                        ? 'bg-blue-600 text-white font-bold shadow-xs'
                         : 'bg-slate-800 text-slate-400'
                     }`}
                   >
-                    {isDone ? `✓ ${s.label}` : s.label}
+                    <span className="sm:hidden">{isDone ? `✓ ${s.short}` : s.short}</span>
+                    <span className="hidden sm:inline">{isDone ? `✓ ${s.full}` : s.full}</span>
                   </div>
                 );
               })}

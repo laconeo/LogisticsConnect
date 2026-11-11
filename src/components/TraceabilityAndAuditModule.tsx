@@ -70,42 +70,45 @@ export const TraceabilityAndAuditModule: React.FC<TraceabilityAndAuditModuleProp
   );
 
   return (
-    <div className="space-y-6">
-      {/* Sub-navigation bar */}
-      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200 pb-4">
-        <div className="flex flex-wrap items-center gap-2">
+    <div className="space-y-5">
+      {/* Sub-navigation Hallmark */}
+      <div className="bg-white border border-slate-200 rounded-xl p-3 sm:p-4 shadow-xs flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+        <div className="grid grid-cols-3 sm:flex items-center gap-1 p-1 bg-slate-100 rounded-lg">
           <button
             onClick={() => setSubTab('aprobacion')}
-            className={`px-3.5 py-2 rounded-md text-xs font-semibold transition-colors whitespace-nowrap shrink-0 flex items-center gap-2 cursor-pointer ${
+            className={`px-2 sm:px-3.5 py-1.5 text-[11px] sm:text-xs font-semibold rounded-md transition-colors cursor-pointer text-center truncate flex items-center justify-center gap-1.5 ${
               subTab === 'aprobacion'
-                ? 'bg-slate-900 text-white'
-                : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'
+                ? 'bg-white text-slate-900 shadow-xs'
+                : 'text-slate-600 hover:text-slate-900'
             }`}
           >
-            <ShieldCheck className="w-3.5 h-3.5" />
-            Validación de Entregas y Evidencias ({deliveredShipments.length})
+            <ShieldCheck className="w-3.5 h-3.5 shrink-0 text-emerald-600" />
+            <span className="sm:hidden">Evidencias</span>
+            <span className="hidden sm:inline">Validación Evidencias ({deliveredShipments.length})</span>
           </button>
           <button
             onClick={() => setSubTab('movimientos')}
-            className={`px-3.5 py-2 rounded-md text-xs font-semibold transition-colors whitespace-nowrap shrink-0 flex items-center gap-2 cursor-pointer ${
+            className={`px-2 sm:px-3.5 py-1.5 text-[11px] sm:text-xs font-semibold rounded-md transition-colors cursor-pointer text-center truncate flex items-center justify-center gap-1.5 ${
               subTab === 'movimientos'
-                ? 'bg-slate-900 text-white'
-                : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'
+                ? 'bg-white text-slate-900 shadow-xs'
+                : 'text-slate-600 hover:text-slate-900'
             }`}
           >
-            <History className="w-3.5 h-3.5" />
-            Historial de Movimientos ({movements.length})
+            <History className="w-3.5 h-3.5 shrink-0 text-blue-600" />
+            <span className="sm:hidden">Movimientos</span>
+            <span className="hidden sm:inline">Historial Movimientos ({movements.length})</span>
           </button>
           <button
             onClick={() => setSubTab('auditoria')}
-            className={`px-3.5 py-2 rounded-md text-xs font-semibold transition-colors whitespace-nowrap shrink-0 flex items-center gap-2 cursor-pointer ${
+            className={`px-2 sm:px-3.5 py-1.5 text-[11px] sm:text-xs font-semibold rounded-md transition-colors cursor-pointer text-center truncate flex items-center justify-center gap-1.5 ${
               subTab === 'auditoria'
-                ? 'bg-slate-900 text-white'
-                : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'
+                ? 'bg-white text-slate-900 shadow-xs'
+                : 'text-slate-600 hover:text-slate-900'
             }`}
           >
-            <Lock className="w-3.5 h-3.5" />
-            Bitácora de Auditoría ({auditLogs.length})
+            <Lock className="w-3.5 h-3.5 shrink-0 text-amber-600" />
+            <span className="sm:hidden">Bitácora</span>
+            <span className="hidden sm:inline">Bitácora Forense ({auditLogs.length})</span>
           </button>
         </div>
 
@@ -116,8 +119,8 @@ export const TraceabilityAndAuditModule: React.FC<TraceabilityAndAuditModuleProp
               type="text"
               value={searchFilter}
               onChange={(e) => setSearchFilter(e.target.value)}
-              placeholder="Filtrar por activo, usuario o ubicación..."
-              className="w-full pl-8 pr-3 py-1.5 text-xs bg-white border border-slate-200 rounded-md focus:outline-none focus:border-blue-600"
+              placeholder="Buscar por activo, usuario..."
+              className="w-full pl-8 pr-3 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:bg-white focus:outline-none focus:border-blue-600"
             />
           </div>
         )}
@@ -341,7 +344,36 @@ export const TraceabilityAndAuditModule: React.FC<TraceabilityAndAuditModuleProp
             </div>
           </div>
 
-          <div className="overflow-x-auto">
+          {/* Vista Móvil Tarjetas de Movimientos */}
+          <div className="md:hidden divide-y divide-slate-100">
+            {filteredMovements.map((m) => (
+              <div key={m.id} className="p-4 space-y-2 text-xs">
+                <div className="flex items-center justify-between">
+                  <span className="font-mono font-bold text-blue-600">{m.activo_id}</span>
+                  <span className="font-mono text-[10px] text-slate-400 tabular-nums">
+                    {m.hora_local_dispositivo}
+                  </span>
+                </div>
+                <div className="flex items-center gap-1.5 font-mono text-[11px]">
+                  <span className="text-slate-500">{m.estado_anterior}</span>
+                  <span className="text-slate-400">→</span>
+                  <span className="font-bold text-slate-900">{m.estado_nuevo}</span>
+                </div>
+                <div className="text-slate-700 bg-slate-50 p-2.5 rounded-lg border border-slate-200/70 space-y-1">
+                  <div className="flex items-start gap-1">
+                    <MapPin className="w-3 h-3 text-slate-400 shrink-0 mt-0.5" />
+                    <span>{m.ubicacion}</span>
+                  </div>
+                  <div className="text-[11px] text-slate-500">
+                    Custodio: <strong>{m.custodio}</strong> · {m.usuario}
+                  </div>
+                </div>
+                <p className="text-[11px] text-slate-600">{m.detalle}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="hidden md:block overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="border-b border-slate-200 bg-slate-50/80 text-[10px] font-bold uppercase tracking-wider text-slate-500">
@@ -412,7 +444,32 @@ export const TraceabilityAndAuditModule: React.FC<TraceabilityAndAuditModuleProp
             </div>
           </div>
 
-          <div className="overflow-x-auto">
+          {/* Vista Móvil Tarjetas de Auditoría */}
+          <div className="md:hidden divide-y divide-slate-100">
+            {filteredAudit.map((log) => (
+              <div key={log.id} className="p-4 space-y-2 text-xs">
+                <div className="flex items-center justify-between">
+                  <span className="font-mono font-bold text-blue-700">{log.accion}</span>
+                  <span className="font-mono text-[10px] text-slate-400 tabular-nums">
+                    {log.fecha_utc.slice(0, 19).replace('T', ' ')}
+                  </span>
+                </div>
+                <div className="text-slate-800 font-medium">
+                  {log.entidad}: <span className="font-mono text-slate-600">{log.entidad_id}</span>
+                </div>
+                <div className="bg-slate-50 p-2.5 rounded-lg border border-slate-200/70 text-[11px] font-mono space-y-1">
+                  <div className="text-slate-500 truncate">Antes: {log.antes}</div>
+                  <div className="text-slate-900 font-semibold truncate">Después: {log.despues}</div>
+                </div>
+                <div className="text-[11px] text-slate-500 flex items-center justify-between">
+                  <span>{log.usuario} ({log.rol})</span>
+                  <span>{log.dispositivo}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="hidden md:block overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="border-b border-slate-200 bg-slate-50/80 text-[10px] font-bold uppercase tracking-wider text-slate-500">

@@ -231,9 +231,9 @@ export const ExcelImportModule: React.FC<ExcelImportModuleProps> = ({
         )}
 
         {/* Summary & Actions */}
-        <div className="flex flex-wrap items-center justify-between gap-4 pt-5">
-          <div className="flex items-center gap-4">
-            <div className="px-4 py-2 bg-emerald-50 border border-emerald-200 rounded-md text-right">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 pt-5">
+          <div className="flex items-center gap-3">
+            <div className="flex-1 sm:flex-none px-4 py-2 bg-emerald-50 border border-emerald-200 rounded-lg text-right">
               <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-700 block">
                 Filas Válidas
               </span>
@@ -241,9 +241,9 @@ export const ExcelImportModule: React.FC<ExcelImportModuleProps> = ({
                 {validRows.length} / {activeValidations.length}
               </span>
             </div>
-            <div className="px-4 py-2 bg-rose-50 border border-rose-200 rounded-md text-right">
+            <div className="flex-1 sm:flex-none px-4 py-2 bg-rose-50 border border-rose-200 rounded-lg text-right">
               <span className="text-[10px] font-bold uppercase tracking-wider text-rose-700 block">
-                Filas con Observación
+                Observadas
               </span>
               <span className="text-lg font-bold font-mono text-rose-800 tabular-nums">
                 {invalidCount}
@@ -251,7 +251,7 @@ export const ExcelImportModule: React.FC<ExcelImportModuleProps> = ({
             </div>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2.5">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
             {invalidCount > 0 && (
               <button
                 onClick={() => {
@@ -260,7 +260,7 @@ export const ExcelImportModule: React.FC<ExcelImportModuleProps> = ({
                     'Se normalizaron automáticamente las comunas sugeridas, formatos de RUT y correos observados.'
                   );
                 }}
-                className="px-4 py-2.5 bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold rounded-md transition-colors flex items-center gap-2 cursor-pointer"
+                className="w-full sm:w-auto justify-center px-4 py-2.5 bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold rounded-lg transition-colors flex items-center gap-2 cursor-pointer shadow-xs"
               >
                 <Wand2 className="w-4 h-4" />
                 Normalizar Automáticamente ({invalidCount} filas)
@@ -276,7 +276,7 @@ export const ExcelImportModule: React.FC<ExcelImportModuleProps> = ({
                 );
               }}
               disabled={validRows.length === 0}
-              className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-200 disabled:text-slate-400 text-white text-xs font-semibold rounded-md transition-colors flex items-center gap-2 cursor-pointer"
+              className="w-full sm:w-auto justify-center px-4 py-2.5 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-200 disabled:text-slate-400 text-white text-xs font-semibold rounded-lg transition-colors flex items-center gap-2 cursor-pointer shadow-xs"
             >
               <FileSpreadsheet className="w-4 h-4" />
               Confirmar e Importar {validRows.length} Filas Válidas

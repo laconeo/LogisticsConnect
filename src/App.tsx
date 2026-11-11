@@ -1348,30 +1348,26 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] text-[#0F172A] flex flex-col font-sans antialiased pb-20 md:pb-6">
+    <div className="min-h-screen bg-[#F8FAFC] text-[#0F172A] flex flex-col font-sans antialiased pb-24 md:pb-8">
       {/* =====================================================================
-          HEADER DE NAVEGACIÓN EN 2 NIVELES CON FILTRADO ESTRICTO POR ROL (RBAC)
+          HEADER DE NAVEGACIÓN HALLMARK CON FILTRADO ESTRICTO POR ROL (RBAC)
       ===================================================================== */}
       <header className="sticky top-0 z-30 bg-slate-900 text-white border-b border-slate-800 shadow-sm">
-        {/* Nivel 1: Marca, País (según ámbito del rol), Selector de Rol y Herramientas */}
-        <div className="max-w-[1440px] mx-auto px-3 sm:px-6 h-14 flex items-center justify-between gap-2">
-          {/* Izquierda: Botón Menú Móvil + Identidad + Selector País */}
+        {/* Nivel 1: Barra Principal */}
+        <div className="max-w-[1440px] mx-auto px-3.5 sm:px-6 h-14 flex items-center justify-between gap-2">
+          {/* Izquierda: Menú Móvil + Identidad + Selector País (Desktop) */}
           <div className="flex items-center gap-2.5 min-w-0">
             <button
               type="button"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 -ml-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-white flex items-center justify-center shrink-0"
+              onClick={() => setMobileMenuOpen(true)}
+              className="md:hidden p-2 -ml-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white flex items-center justify-center shrink-0 cursor-pointer"
               aria-label="Abrir menú de navegación"
             >
-              {mobileMenuOpen ? (
-                <X className="w-5 h-5" />
-              ) : (
-                <Menu className="w-5 h-5" />
-              )}
+              <Menu className="w-5 h-5" />
             </button>
 
             <div className="flex items-center gap-2 shrink-0">
-              <div className="w-8 h-8 rounded-md bg-blue-600 flex items-center justify-center font-bold text-white shadow-xs">
+              <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center font-bold text-white shadow-xs">
                 <Truck className="w-4 h-4" />
               </div>
               <div className="leading-tight">
@@ -1379,15 +1375,15 @@ export default function App() {
                   LOGISTICS CONNECT
                 </span>
                 <span className="text-[10px] text-slate-400 hidden sm:block">
-                  Vista adaptada al rol: {currentUser.rol_etiqueta}
+                  {currentUser.rol_etiqueta} · {currentUser.pais}
                 </span>
               </div>
             </div>
 
-            <div className="h-4 w-px bg-slate-800 hidden sm:block" />
+            <div className="h-4 w-px bg-slate-800 hidden lg:block" />
 
-            {/* Selector de País (Bloquea otros países si el rol es de ámbito nacional/local) */}
-            <div className="flex items-center gap-1 bg-slate-800/90 p-0.5 rounded-md border border-slate-700/80">
+            {/* Selector de País Desktop */}
+            <div className="hidden md:flex items-center gap-1 bg-slate-800/90 p-0.5 rounded-lg border border-slate-700/80">
               {COUNTRY_SUMMARIES.map((c) => {
                 const isAllowedCountry =
                   activeRolePerms.canSwitchCountries ||
@@ -1398,10 +1394,10 @@ export default function App() {
                     disabled={!isAllowedCountry}
                     onClick={() => isAllowedCountry && setSelectedCountry(c.codigo)}
                     className={`px-2 py-1 rounded text-[11px] font-semibold transition-colors whitespace-nowrap shrink-0 flex items-center gap-1 ${selectedCountry === c.codigo
-                        ? 'bg-blue-600 text-white cursor-pointer'
+                        ? 'bg-blue-600 text-white cursor-pointer shadow-xs'
                         : isAllowedCountry
                           ? 'text-slate-400 hover:text-white cursor-pointer'
-                          : 'text-slate-600 cursor-not-allowed opacity-50'
+                          : 'text-slate-600 cursor-not-allowed opacity-40'
                       }`}
                     title={
                       isAllowedCountry
@@ -1411,16 +1407,28 @@ export default function App() {
                   >
                     {!isAllowedCountry && <Lock className="w-2.5 h-2.5" />}
                     {c.codigo}
-                    <span className="hidden lg:inline"> · {c.nombre}</span>
+                    <span className="hidden xl:inline"> · {c.nombre}</span>
                   </button>
                 );
               })}
             </div>
           </div>
 
-          {/* Derecha: Usuario/Rol Activo + Exportación Datos + Salir */}
-          <div className="flex items-center gap-2 shrink-0">
-            <div className="flex items-center gap-1.5 bg-slate-800 border border-blue-500/60 rounded-md px-2.5 py-1">
+          {/* Derecha: En Móvil selector compacto, en Desktop barra completa */}
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+            {/* Quick Country Pill on Mobile */}
+            <button
+              type="button"
+              onClick={() => setMobileMenuOpen(true)}
+              className="md:hidden flex items-center gap-1 bg-slate-800 hover:bg-slate-700 px-2 py-1 rounded-md text-[11px] font-bold text-blue-300 border border-slate-700 cursor-pointer"
+              title="Cambiar país o rol"
+            >
+              <MapPin className="w-3 h-3 text-blue-400" />
+              <span>{selectedCountry}</span>
+            </button>
+
+            {/* Desktop User Switcher */}
+            <div className="hidden md:flex items-center gap-1.5 bg-slate-800 border border-blue-500/60 rounded-md px-2.5 py-1">
               <UserCheck className="w-3.5 h-3.5 text-blue-400 shrink-0" />
               <select
                 value={currentUserId}
@@ -1443,7 +1451,7 @@ export default function App() {
             {currentUser.rol === 'ADMIN_REGIONAL' && (
               <button
                 onClick={() => setShowUserModal(true)}
-                className="px-2.5 py-1.5 rounded-md border border-rose-500/60 bg-rose-950/70 hover:bg-rose-900 text-xs font-semibold text-rose-200 flex items-center gap-1.5 whitespace-nowrap shrink-0 cursor-pointer shadow-xs"
+                className="hidden md:flex px-2.5 py-1.5 rounded-md border border-rose-500/60 bg-rose-950/70 hover:bg-rose-900 text-xs font-semibold text-rose-200 items-center gap-1.5 whitespace-nowrap shrink-0 cursor-pointer shadow-xs"
                 title="Gestión y Alta de Usuarios (Módulo exclusivo Administrador Regional)"
               >
                 <UserPlus className="w-3.5 h-3.5 text-rose-400" />
@@ -1454,7 +1462,7 @@ export default function App() {
             {activeRolePerms.canManageDb && (
               <button
                 onClick={() => setShowDbModal(true)}
-                className="px-2.5 py-1.5 rounded-md border border-slate-700 bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-200 flex items-center gap-1.5 whitespace-nowrap shrink-0 cursor-pointer"
+                className="hidden md:flex px-2.5 py-1.5 rounded-md border border-slate-700 bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-200 items-center gap-1.5 whitespace-nowrap shrink-0 cursor-pointer"
                 title="Administración de Datos y Exportación CSV/SQL"
               >
                 <Database className="w-3.5 h-3.5 text-emerald-400" />
@@ -1462,6 +1470,22 @@ export default function App() {
               </button>
             )}
 
+            {/* Mobile User Profile Button (opens Drawer) */}
+            <button
+              type="button"
+              onClick={() => setMobileMenuOpen(true)}
+              className="md:hidden flex items-center gap-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 px-2 py-1 rounded-md text-[11px] font-semibold text-slate-200 cursor-pointer"
+              title="Abrir perfil y opciones"
+            >
+              <span className="w-5 h-5 rounded-full bg-blue-600 text-white text-[10px] font-bold flex items-center justify-center">
+                {currentUser.nombre.charAt(0)}
+              </span>
+              <span className="max-w-[70px] truncate text-[11px]">
+                {currentUser.nombre.split(' ')[0]}
+              </span>
+            </button>
+
+            {/* Logout Button */}
             <button
               onClick={handleLogout}
               className="p-1.5 rounded-md border border-slate-700 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white cursor-pointer"
@@ -1472,17 +1496,17 @@ export default function App() {
           </div>
         </div>
 
-        {/* Nivel 2: MENÚ DE INSTANCIAS AUTORIZADAS PARA EL ROL ACTIVO */}
-        <div className="bg-slate-950/90 border-t border-slate-800/90">
+        {/* Nivel 2: MENÚ DE INSTANCIAS AUTORIZADAS (Solo Desktop - en móvil se usa la barra inferior fija) */}
+        <div className="hidden md:block bg-slate-950/90 border-t border-slate-800/90">
           <div className="max-w-[1440px] mx-auto px-3 sm:px-6 py-2">
             <div
-              className={`flex md:grid gap-2 overflow-x-auto no-scrollbar pb-0.5 ${allowedLogisticsStages.length === 2
-                  ? 'md:grid-cols-2 max-w-2xl'
+              className={`grid gap-2 ${allowedLogisticsStages.length === 2
+                  ? 'grid-cols-2 max-w-2xl'
                   : allowedLogisticsStages.length === 3
-                    ? 'md:grid-cols-3 max-w-4xl'
+                    ? 'grid-cols-3 max-w-4xl'
                     : allowedLogisticsStages.length === 4
-                      ? 'md:grid-cols-4'
-                      : 'md:grid-cols-6'
+                      ? 'grid-cols-4'
+                      : 'grid-cols-6'
                 }`}
             >
               {allowedLogisticsStages.map((stage) => {
@@ -1496,7 +1520,7 @@ export default function App() {
                       setActiveModule(stage.id);
                       setMobileMenuOpen(false);
                     }}
-                    className={`group text-left px-3 py-2 rounded-lg border transition-all shrink-0 min-w-[165px] md:min-w-0 cursor-pointer flex flex-col justify-between ${isActive
+                    className={`group text-left px-3 py-2 rounded-lg border transition-all cursor-pointer flex flex-col justify-between ${isActive
                         ? 'bg-blue-600 text-white border-blue-500 shadow-xs'
                         : 'bg-slate-900/90 text-slate-300 border-slate-800 hover:bg-slate-800 hover:text-white'
                       }`}
@@ -1543,68 +1567,196 @@ export default function App() {
           </div>
         </div>
 
-        {/* Menú Desplegable Móvil */}
+        {/* Modal Drawer Desplegable Móvil (Slide-over limpio Hallmark) */}
         {mobileMenuOpen && (
-          <div className="md:hidden bg-slate-900 border-t border-slate-800 px-4 py-4 space-y-4">
-            <div className="text-xs font-bold uppercase tracking-wider text-slate-400">
-              Pantallas Habilitadas para {currentUser.rol_etiqueta}
-            </div>
-            <div className="grid grid-cols-1 gap-2">
-              {allowedLogisticsStages.map((stage) => {
-                const Icon = stage.icon;
-                const isActive = activeModule === stage.id;
-                return (
+          <div className="md:hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-xs flex flex-col justify-end sm:justify-start">
+            <div className="bg-slate-900 border-t sm:border-b sm:border-t-0 border-slate-800 p-5 space-y-4 max-h-[85vh] overflow-y-auto rounded-t-2xl sm:rounded-none shadow-2xl">
+              {/* Header Drawer con Botón Cerrar */}
+              <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center font-bold text-white text-xs">
+                    {currentUser.nombre.charAt(0)}
+                  </div>
+                  <div>
+                    <div className="text-sm font-bold text-white truncate max-w-[200px]">
+                      {currentUser.nombre}
+                    </div>
+                    <div className="text-[11px] text-blue-400 font-semibold">
+                      {currentUser.rol_etiqueta} · {currentUser.organizacion}
+                    </div>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white cursor-pointer"
+                  aria-label="Cerrar menú"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* Selector de Rol / Cuentas en Móvil */}
+              <div className="space-y-1.5">
+                <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
+                  Cambiar Rol Operativo / Cuenta Demo
+                </label>
+                <div className="relative">
+                  <UserCheck className="w-4 h-4 text-blue-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                  <select
+                    value={currentUserId}
+                    onChange={(e) => handleSelectUserAccount(e.target.value)}
+                    className="w-full pl-9 pr-3 py-2.5 bg-slate-800 border border-slate-700 rounded-lg text-xs font-semibold text-white focus:outline-none focus:border-blue-500"
+                  >
+                    {users.map((u) => (
+                      <option key={u.id} value={u.id}>
+                        {u.nombre} — {u.rol_etiqueta}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              {/* Selector de País en Móvil */}
+              <div className="space-y-1.5">
+                <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                  <span>País Operativo</span>
+                  {!activeRolePerms.canSwitchCountries && (
+                    <span className="text-amber-400 lowercase text-[10px] font-normal">
+                      (Restringido a su país por rol)
+                    </span>
+                  )}
+                </div>
+                <div className="grid grid-cols-4 gap-1.5">
+                  {COUNTRY_SUMMARIES.map((c) => {
+                    const isAllowedCountry =
+                      activeRolePerms.canSwitchCountries ||
+                      c.codigo === currentUser.pais;
+                    return (
+                      <button
+                        key={c.codigo}
+                        disabled={!isAllowedCountry}
+                        onClick={() => {
+                          if (isAllowedCountry) {
+                            setSelectedCountry(c.codigo);
+                            setMobileMenuOpen(false);
+                          }
+                        }}
+                        className={`py-2 px-2 rounded-lg text-xs font-bold transition-all text-center flex flex-col items-center justify-center gap-0.5 ${selectedCountry === c.codigo
+                            ? 'bg-blue-600 text-white shadow-xs'
+                            : isAllowedCountry
+                              ? 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+                              : 'bg-slate-800/40 text-slate-600 opacity-40 cursor-not-allowed'
+                          }`}
+                      >
+                        <span>{c.codigo}</span>
+                        <span className="text-[9px] font-normal opacity-75 truncate max-w-[60px]">
+                          {c.nombre}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Lista Completa de Pantallas Autorizadas */}
+              <div className="space-y-1.5">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
+                  Instancias Habilitadas ({allowedLogisticsStages.length} de 6)
+                </span>
+                <div className="grid grid-cols-1 gap-1.5">
+                  {allowedLogisticsStages.map((stage) => {
+                    const Icon = stage.icon;
+                    const isActive = activeModule === stage.id;
+                    return (
+                      <button
+                        key={stage.id}
+                        type="button"
+                        onClick={() => {
+                          setActiveModule(stage.id);
+                          setMobileMenuOpen(false);
+                        }}
+                        className={`w-full p-3 rounded-xl border text-left flex items-center justify-between transition-colors ${isActive
+                            ? 'bg-blue-600 text-white border-blue-500 shadow-xs'
+                            : 'bg-slate-800/80 text-slate-200 border-slate-700 hover:bg-slate-800'
+                          }`}
+                      >
+                        <div className="flex items-center gap-3 min-w-0">
+                          <Icon className="w-4 h-4 shrink-0" />
+                          <div className="min-w-0">
+                            <div className="text-xs font-bold truncate">
+                              {stage.title}
+                            </div>
+                            <div
+                              className={`text-[11px] truncate ${isActive ? 'text-blue-100' : 'text-slate-400'
+                                }`}
+                            >
+                              {stage.subtitle}
+                            </div>
+                          </div>
+                        </div>
+                        <span className="text-xs font-mono font-bold shrink-0 ml-2">
+                          {stage.badge}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Acciones de Administrador & Sistema */}
+              <div className="pt-2 border-t border-slate-800 space-y-2">
+                {currentUser.rol === 'ADMIN_REGIONAL' && (
                   <button
-                    key={stage.id}
                     type="button"
                     onClick={() => {
-                      setActiveModule(stage.id);
+                      setShowUserModal(true);
                       setMobileMenuOpen(false);
                     }}
-                    className={`w-full p-3 rounded-lg border text-left flex items-center justify-between ${isActive
-                        ? 'bg-blue-600 text-white border-blue-500'
-                        : 'bg-slate-800/80 text-slate-200 border-slate-700'
-                      }`}
+                    className="w-full p-3 rounded-xl border border-rose-800 bg-rose-950/70 hover:bg-rose-900/80 text-rose-200 text-left flex items-center justify-between"
                   >
                     <div className="flex items-center gap-3">
-                      <Icon className="w-4 h-4 shrink-0" />
+                      <UserPlus className="w-4 h-4 text-rose-400 shrink-0" />
                       <div>
-                        <div className="text-xs font-bold">{stage.title}</div>
-                        <div
-                          className={`text-[11px] ${isActive ? 'text-blue-100' : 'text-slate-400'
-                            }`}
-                        >
-                          {stage.subtitle}
+                        <div className="text-xs font-bold">Gestión y Alta de Usuarios</div>
+                        <div className="text-[11px] text-rose-300">
+                          Solo perfil Administrador Regional
                         </div>
                       </div>
                     </div>
-                    <span className="text-xs font-mono font-bold">
-                      {stage.badge}
-                    </span>
                   </button>
-                );
-              })}
+                )}
 
-              {currentUser.rol === 'ADMIN_REGIONAL' && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setShowUserModal(true);
-                    setMobileMenuOpen(false);
-                  }}
-                  className="w-full p-3 rounded-lg border border-rose-800 bg-rose-950/70 hover:bg-rose-900/80 text-rose-200 text-left flex items-center justify-between"
-                >
-                  <div className="flex items-center gap-3">
-                    <UserPlus className="w-4 h-4 text-rose-400 shrink-0" />
-                    <div>
-                      <div className="text-xs font-bold">Gestión y Alta de Usuarios</div>
-                      <div className="text-[11px] text-rose-300">
-                        Solo perfil Administrador Regional
+                {activeRolePerms.canManageDb && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowDbModal(true);
+                      setMobileMenuOpen(false);
+                    }}
+                    className="w-full p-3 rounded-xl border border-slate-700 bg-slate-800 hover:bg-slate-750 text-slate-200 text-left flex items-center justify-between"
+                  >
+                    <div className="flex items-center gap-3">
+                      <Database className="w-4 h-4 text-emerald-400 shrink-0" />
+                      <div>
+                        <div className="text-xs font-bold">Base de Datos y SQL</div>
+                        <div className="text-[11px] text-slate-400">
+                          Exportar CSV, DDL y sincronizar
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  </button>
+                )}
+
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  className="w-full p-2.5 rounded-lg border border-slate-800 text-rose-400 hover:bg-rose-950/40 text-xs font-semibold flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  <LogOut className="w-4 h-4" />
+                  Cerrar Sesión
                 </button>
-              )}
+              </div>
             </div>
           </div>
         )}
@@ -1612,26 +1764,24 @@ export default function App() {
 
       {/* Banner de Permisos y Ámbito del Rol Activo */}
       <div className="bg-white border-b border-slate-200">
-        <div className="max-w-[1440px] mx-auto px-3 sm:px-6 py-2.5 flex flex-wrap items-center justify-between gap-2 text-xs">
-          <div className="flex flex-wrap items-center gap-2 text-slate-700">
-            <span className="font-mono font-bold text-blue-700 uppercase">
+        <div className="max-w-[1440px] mx-auto px-3.5 sm:px-6 py-2 flex flex-wrap items-center justify-between gap-1.5 text-xs">
+          <div className="flex items-center gap-1.5 text-slate-700 min-w-0">
+            <span className="font-mono font-bold text-blue-700 uppercase shrink-0 text-[11px] sm:text-xs">
               [{currentUser.rol_etiqueta}]
             </span>
-            <span className="font-semibold text-slate-900">
-              {currentUser.nombre} ({currentUser.organizacion})
+            <span className="font-semibold text-slate-900 truncate">
+              {currentUser.nombre}
             </span>
+            <span className="text-slate-400 hidden sm:inline">({currentUser.organizacion})</span>
             <span className="text-slate-300 hidden md:inline">·</span>
             <span className="text-slate-500 text-[11px] hidden md:inline">
               {activeRolePerms.description}
             </span>
           </div>
 
-          <div className="flex items-center gap-3 text-slate-500 font-mono text-[11px]">
+          <div className="flex items-center gap-2 text-slate-500 font-mono text-[10px] sm:text-[11px] shrink-0">
             <span>
-              Pantallas activas:{' '}
-              <strong className="text-slate-900">
-                {allowedLogisticsStages.length} de 6
-              </strong>
+              Pantallas: <strong className="text-slate-900">{allowedLogisticsStages.length}/6</strong>
             </span>
             <span>·</span>
             <span>
@@ -1642,12 +1792,12 @@ export default function App() {
       </div>
 
       {/* Main Content Workspace */}
-      <main className="flex-1 max-w-[1440px] w-full mx-auto px-3 sm:px-6 py-4 sm:py-6 space-y-5">
+      <main className="flex-1 max-w-[1440px] w-full mx-auto px-3.5 sm:px-6 py-4 sm:py-6 space-y-5">
         {activeModule === 'torre_control' && (
           <>
             {/* KPI Metric Strip — 2x2 on mobile, 4 in a row on desktop */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-              <div className="bg-white border border-slate-200/80 rounded-lg p-3.5 sm:p-5 shadow-xs">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
+              <div className="bg-white border border-slate-200/80 rounded-xl p-3 sm:p-5 shadow-xs">
                 <div className="flex items-center justify-between">
                   <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-500">
                     {currentUser.rol === 'TRANSPORTISTA'
@@ -1656,16 +1806,16 @@ export default function App() {
                   </span>
                   <Package className="w-4 h-4 text-blue-600 shrink-0" />
                 </div>
-                <div className="mt-1.5 flex items-baseline justify-between gap-1">
+                <div className="mt-1 flex items-baseline justify-between gap-1">
                   <span className="text-xl sm:text-2xl font-bold font-mono text-slate-900 tabular-nums">
                     {currentUser.rol === 'TRANSPORTISTA'
                       ? visibleShipments.length
                       : currentCountrySummary.centros_totales_2026}
                   </span>
-                  <span className="text-[11px] font-semibold text-emerald-700 tabular-nums truncate">
+                  <span className="text-[10px] sm:text-[11px] font-semibold text-emerald-700 tabular-nums truncate">
                     {currentUser.rol === 'TRANSPORTISTA'
                       ? currentUser.organizacion
-                      : `${currentCountrySummary.notebooks_desplegados} equipos`}
+                      : `${currentCountrySummary.notebooks_desplegados} eq.`}
                   </span>
                 </div>
                 <p className="text-[11px] text-slate-500 mt-1 hidden sm:block">
@@ -1673,21 +1823,21 @@ export default function App() {
                 </p>
               </div>
 
-              <div className="bg-white border border-slate-200/80 rounded-lg p-3.5 sm:p-5 shadow-xs">
+              <div className="bg-white border border-slate-200/80 rounded-xl p-3 sm:p-5 shadow-xs">
                 <div className="flex items-center justify-between">
                   <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-500">
                     Entregas Listas
                   </span>
                   <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
                 </div>
-                <div className="mt-1.5 flex items-baseline justify-between gap-1">
+                <div className="mt-1 flex items-baseline justify-between gap-1">
                   <span className="text-xl sm:text-2xl font-bold font-mono text-slate-900 tabular-nums">
                     {currentUser.rol === 'TRANSPORTISTA'
                       ? visibleShipments.filter((s) => s.estado === 'Entregado')
                         .length
                       : `${currentCountrySummary.centros_entregados}/${currentCountrySummary.centros_totales_2026}`}
                   </span>
-                  <span className="text-[11px] font-semibold text-emerald-700 tabular-nums">
+                  <span className="text-[10px] sm:text-[11px] font-semibold text-emerald-700 tabular-nums">
                     Con respaldo
                   </span>
                 </div>
@@ -1696,14 +1846,14 @@ export default function App() {
                 </p>
               </div>
 
-              <div className="bg-white border border-slate-200/80 rounded-lg p-3.5 sm:p-5 shadow-xs">
+              <div className="bg-white border border-slate-200/80 rounded-xl p-3 sm:p-5 shadow-xs">
                 <div className="flex items-center justify-between">
                   <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-500">
                     En Ruta / Pendientes
                   </span>
                   <Truck className="w-4 h-4 text-amber-600 shrink-0" />
                 </div>
-                <div className="mt-1.5 flex items-baseline justify-between gap-1">
+                <div className="mt-1 flex items-baseline justify-between gap-1">
                   <span className="text-xl sm:text-2xl font-bold font-mono text-slate-900 tabular-nums">
                     {
                       visibleShipments.filter(
@@ -1711,7 +1861,7 @@ export default function App() {
                       ).length
                     }
                   </span>
-                  <span className="text-[11px] font-mono text-slate-500 truncate">
+                  <span className="text-[10px] sm:text-[11px] font-mono text-slate-500 truncate">
                     En seguimiento
                   </span>
                 </div>
@@ -1720,18 +1870,18 @@ export default function App() {
                 </p>
               </div>
 
-              <div className="bg-white border border-slate-200/80 rounded-lg p-3.5 sm:p-5 shadow-xs">
+              <div className="bg-white border border-slate-200/80 rounded-xl p-3 sm:p-5 shadow-xs">
                 <div className="flex items-center justify-between">
                   <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-500">
                     Valor Declarado
                   </span>
                   <Clock className="w-4 h-4 text-blue-600 shrink-0" />
                 </div>
-                <div className="mt-1.5 flex items-baseline justify-between gap-1">
+                <div className="mt-1 flex items-baseline justify-between gap-1">
                   <span className="text-xl sm:text-2xl font-bold font-mono text-slate-900 tabular-nums">
                     $3.0M
                   </span>
-                  <span className="text-[11px] font-semibold text-blue-700">
+                  <span className="text-[10px] sm:text-[11px] font-semibold text-blue-700">
                     CLP · 15 kg
                   </span>
                 </div>
@@ -1742,7 +1892,7 @@ export default function App() {
             </div>
 
             {/* Shipments Master Container */}
-            <div className="bg-white border border-slate-200/80 rounded-lg shadow-xs overflow-hidden">
+            <div className="bg-white border border-slate-200/80 rounded-xl shadow-xs overflow-hidden">
               <div className="p-4 sm:p-5 border-b border-slate-200 flex flex-col lg:flex-row lg:items-center justify-between gap-3">
                 <div>
                   <span className="text-[10px] font-mono uppercase tracking-widest text-blue-600 font-semibold block">
@@ -1757,14 +1907,14 @@ export default function App() {
 
                 {/* Filters & Action Buttons */}
                 <div className="flex flex-wrap items-center gap-2">
-                  <div className="relative w-full sm:w-60">
+                  <div className="relative flex-1 sm:flex-none sm:w-60 min-w-[160px]">
                     <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                     <input
                       type="text"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      placeholder="Buscar estaca, comuna, activo..."
-                      className="w-full pl-8 pr-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-md focus:bg-white focus:outline-none focus:border-blue-600"
+                      placeholder="Buscar estaca, comuna..."
+                      className="w-full pl-8 pr-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:bg-white focus:outline-none focus:border-blue-600"
                     />
                   </div>
 
@@ -1773,7 +1923,7 @@ export default function App() {
                     onChange={(e) =>
                       setStateFilter(e.target.value as ShipmentStatus | 'TODOS')
                     }
-                    className="flex-1 sm:flex-none px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-md font-medium text-slate-700 focus:outline-none focus:border-blue-600"
+                    className="px-2.5 py-2 text-xs bg-slate-50 border border-slate-200 rounded-lg font-medium text-slate-700 focus:outline-none focus:border-blue-600 cursor-pointer"
                   >
                     <option value="TODOS">Todos los estados</option>
                     <option value="Pendiente">Pendiente</option>
@@ -1786,16 +1936,16 @@ export default function App() {
 
                   <button
                     onClick={() => downloadShipmentsCsv(visibleShipments)}
-                    className="px-3 py-2 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-semibold rounded-md transition-colors flex items-center gap-1.5 whitespace-nowrap shrink-0 cursor-pointer"
+                    className="px-3 py-2 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-semibold rounded-lg transition-colors flex items-center gap-1.5 whitespace-nowrap shrink-0 cursor-pointer"
                   >
                     <Download className="w-3.5 h-3.5" />
-                    CSV
+                    <span className="hidden sm:inline">CSV</span>
                   </button>
 
                   {activeRolePerms.canCreateShipment && (
                     <button
                       onClick={() => setShowNewShipmentModal(true)}
-                      className="w-full sm:w-auto justify-center px-3.5 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-md transition-colors flex items-center gap-1.5 whitespace-nowrap shrink-0 cursor-pointer"
+                      className="w-full sm:w-auto justify-center px-3.5 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-lg transition-colors flex items-center gap-1.5 whitespace-nowrap shrink-0 cursor-pointer shadow-xs"
                     >
                       <Plus className="w-3.5 h-3.5" />
                       Nueva Orden de Envío
@@ -1805,25 +1955,25 @@ export default function App() {
               </div>
 
               {/* ===============================================================
-                  VISTA MÓVIL DE TARJETAS OPERATIVAS (md:hidden)
+                  VISTA MÓVIL DE TARJETAS OPERATIVAS HALLMARK (md:hidden)
               =============================================================== */}
-              <div className="md:hidden divide-y divide-slate-200">
+              <div className="md:hidden divide-y divide-slate-100">
                 {visibleShipments.map((sh) => {
                   const assetObj = assets.find((a) => a.id === sh.activo_id);
                   return (
                     <div key={sh.id} className="p-4 space-y-3">
                       <div className="flex items-start justify-between gap-2">
-                        <div>
+                        <div className="min-w-0">
                           <button
                             onClick={() =>
                               activeRolePerms.canReassignCarrier &&
                               setSelectedShipmentDetail(sh)
                             }
-                            className="font-mono text-xs font-bold text-blue-600 underline"
+                            className="font-mono text-xs font-bold text-blue-600 hover:underline inline-block"
                           >
                             {sh.activo_id} · {sh.remito_numero}
                           </button>
-                          <h3 className="text-sm font-bold text-slate-900 mt-0.5">
+                          <h3 className="text-sm font-bold text-slate-900 mt-0.5 truncate">
                             {sh.estaca_distrito}{' '}
                             <span className="font-mono text-xs font-normal text-slate-500">
                               (#{sh.unidad_id})
@@ -1835,46 +1985,51 @@ export default function App() {
                         </div>
                       </div>
 
-                      <div className="text-xs text-slate-600 space-y-1 bg-slate-50 p-3 rounded-lg border border-slate-200/70">
+                      <div className="text-xs text-slate-600 space-y-1.5 bg-slate-50/80 p-3 rounded-xl border border-slate-200/70">
                         <div className="flex items-start gap-1.5">
                           <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0 mt-0.5" />
-                          <span>
-                            {sh.direccion}, <strong>{sh.comuna}</strong> ({sh.region})
+                          <span className="leading-snug">
+                            {sh.direccion}, <strong>{sh.comuna}</strong>
                           </span>
                         </div>
                         <div className="flex items-center justify-between pt-1 border-t border-slate-200/60">
-                          <span className="font-medium text-slate-800">
+                          <span className="font-medium text-slate-800 truncate pr-2">
                             {sh.destinatario_titular}
                           </span>
                           <a
                             href={`tel:${sh.telefono}`}
-                            className="font-mono text-blue-700 font-semibold inline-flex items-center gap-1"
+                            className="font-mono text-blue-700 bg-blue-50 hover:bg-blue-100 px-2 py-0.5 rounded text-[11px] font-semibold inline-flex items-center gap-1 shrink-0"
                           >
                             <Phone className="w-3 h-3" />
                             {sh.telefono}
                           </a>
                         </div>
-                        <div className="text-[11px] font-mono text-slate-500">
-                          Transporte: {sh.transportista_nombre}
+                        <div className="text-[11px] text-slate-500 flex items-center justify-between">
+                          <span>Operador: {sh.transportista_nombre}</span>
+                          {sh.llegada_hora_local && (
+                            <span className="font-mono text-teal-700 font-semibold">
+                              Llegada: {sh.llegada_hora_local}
+                            </span>
+                          )}
                         </div>
                       </div>
 
-                      {/* Botones de Acción Táctiles en Móvil */}
-                      <div className="grid grid-cols-3 gap-2 pt-1">
+                      {/* Botones de Acción Táctiles Grandes en Móvil */}
+                      <div className="grid grid-cols-3 gap-2 pt-0.5">
                         {assetObj && (
                           <button
                             onClick={() => setQrBatchModalAssets([assetObj])}
-                            className="py-2.5 px-2 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5"
+                            className="min-h-[42px] py-2 px-2 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer active:scale-95 transition-transform"
                           >
-                            <QrCode className="w-3.5 h-3.5" />
+                            <QrCode className="w-3.5 h-3.5 text-slate-600" />
                             QR
                           </button>
                         )}
                         <button
                           onClick={() => setRemitoModalShipment(sh)}
-                          className="py-2.5 px-2 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5"
+                          className="min-h-[42px] py-2 px-2 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer active:scale-95 transition-transform"
                         >
-                          <Printer className="w-3.5 h-3.5" />
+                          <Printer className="w-3.5 h-3.5 text-slate-600" />
                           Remito
                         </button>
                         {currentUser.rol !== 'AUDITOR' ? (
@@ -1883,13 +2038,13 @@ export default function App() {
                               setSelectedFieldShipmentId(sh.id);
                               setActiveModule('app_terreno');
                             }}
-                            className="py-2.5 px-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-bold flex items-center justify-center gap-1"
+                            className="min-h-[42px] py-2 px-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-1 shadow-xs cursor-pointer active:scale-95 transition-transform"
                           >
                             {sh.estado === 'Entregado' ? 'Ver' : 'Operar'}
                             <ChevronRight className="w-3.5 h-3.5" />
                           </button>
                         ) : (
-                          <span className="py-2.5 px-2 bg-slate-100 text-slate-500 rounded-lg text-[11px] font-medium flex items-center justify-center gap-1">
+                          <span className="min-h-[42px] py-2 px-2 bg-slate-100 text-slate-500 rounded-xl text-[11px] font-medium flex items-center justify-center gap-1">
                             <Eye className="w-3.5 h-3.5" /> Lectura
                           </span>
                         )}
@@ -2124,40 +2279,79 @@ export default function App() {
       </main>
 
       {/* =====================================================================
-          BARRA DE NAVEGACIÓN INFERIOR FIJA PARA MÓVIL (md:hidden)
-          Muestra dinámicamente solo las pantallas autorizadas para el rol
+          BARRA DE NAVEGACIÓN INFERIOR HALLMARK PARA MÓVIL (md:hidden)
+          Táctil, ergonómica con soporte de safe-area y acceso a menú completo
       ===================================================================== */}
       <nav
-        className={`md:hidden fixed bottom-0 inset-x-0 z-40 bg-slate-900 border-t border-slate-800 text-white grid h-16 px-1 ${allowedLogisticsStages.length === 2
-            ? 'grid-cols-2'
-            : allowedLogisticsStages.length === 3
-              ? 'grid-cols-3'
-              : allowedLogisticsStages.length === 4
-                ? 'grid-cols-4'
-                : 'grid-cols-5'
-          }`}
+        className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-slate-900/95 backdrop-blur-md border-t border-slate-800 text-white shadow-2xl safe-bottom"
       >
-        {allowedLogisticsStages.slice(0, 5).map((stage) => {
-          const Icon = stage.icon;
-          const isActive = activeModule === stage.id;
-          return (
+        <div
+          className={`grid h-15 px-1 items-center ${allowedLogisticsStages.length <= 4
+              ? allowedLogisticsStages.length === 2
+                ? 'grid-cols-2'
+                : allowedLogisticsStages.length === 3
+                  ? 'grid-cols-3'
+                  : 'grid-cols-4'
+              : 'grid-cols-5'
+            }`}
+        >
+          {/* Primeros 4 o 5 accesos directos */}
+          {(allowedLogisticsStages.length <= 5
+            ? allowedLogisticsStages
+            : allowedLogisticsStages.slice(0, 4)
+          ).map((stage) => {
+            const Icon = stage.icon;
+            const isActive = activeModule === stage.id;
+            return (
+              <button
+                key={stage.id}
+                type="button"
+                onClick={() => {
+                  setActiveModule(stage.id);
+                  setMobileMenuOpen(false);
+                }}
+                className={`flex flex-col items-center justify-center py-1 transition-all rounded-lg cursor-pointer ${isActive
+                    ? 'text-blue-400 font-bold'
+                    : 'text-slate-400 hover:text-slate-200 active:scale-95'
+                  }`}
+              >
+                <div
+                  className={`p-1 rounded-md transition-colors ${isActive ? 'bg-blue-500/20 text-blue-400' : ''
+                    }`}
+                >
+                  <Icon className="w-5 h-5" />
+                </div>
+                <span className="text-[10px] tracking-tight truncate max-w-[68px] mt-0.5">
+                  {stage.shortTitle}
+                </span>
+              </button>
+            );
+          })}
+
+          {/* Botón "Más" si hay 6 instancias o más */}
+          {allowedLogisticsStages.length > 5 && (
             <button
-              key={stage.id}
               type="button"
-              onClick={() => {
-                setActiveModule(stage.id);
-                setMobileMenuOpen(false);
-              }}
-              className={`flex flex-col items-center justify-center gap-1 ${isActive ? 'text-blue-400 font-bold' : 'text-slate-400'
+              onClick={() => setMobileMenuOpen(true)}
+              className={`flex flex-col items-center justify-center py-1 transition-all rounded-lg cursor-pointer ${allowedLogisticsStages.slice(4).some((s) => s.id === activeModule)
+                  ? 'text-blue-400 font-bold'
+                  : 'text-slate-400 hover:text-slate-200 active:scale-95'
                 }`}
             >
-              <Icon className="w-5 h-5" />
-              <span className="text-[10px] truncate max-w-[72px]">
-                {stage.shortTitle}
+              <div
+                className={`p-1 rounded-md transition-colors ${allowedLogisticsStages.slice(4).some((s) => s.id === activeModule)
+                    ? 'bg-blue-500/20 text-blue-400'
+                    : ''
+                  }`}
+              >
+                <Layers className="w-5 h-5" />
+              </div>
+              <span className="text-[10px] tracking-tight truncate max-w-[68px] mt-0.5">
+                {allowedLogisticsStages.slice(4).find((s) => s.id === activeModule)?.shortTitle || 'Más'}
               </span>
             </button>
-          );
-        })}
+          )}
+        </div>
       </nav>
 
       {/* Modal: Remito PDF (2 Ejemplares) */}
