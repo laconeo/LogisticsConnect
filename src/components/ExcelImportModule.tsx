@@ -56,9 +56,9 @@ export const ExcelImportModule: React.FC<ExcelImportModuleProps> = ({
     const firstLower = lines[0].toLowerCase();
     const dataLines =
       firstLower.includes('unidad') ||
-      firstLower.includes('estaca') ||
-      firstLower.includes('destinatario') ||
-      firstLower.includes('rut')
+        firstLower.includes('estaca') ||
+        firstLower.includes('destinatario') ||
+        firstLower.includes('rut')
         ? lines.slice(1)
         : lines;
 

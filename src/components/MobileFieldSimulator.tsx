@@ -404,7 +404,7 @@ export const MobileFieldSimulator: React.FC<FieldOperationsViewProps> = ({
       photo1Obj,
       photo2Obj,
       signatureText.trim() ||
-        `${finalReceiverName} (${rutValidation.formatted})`,
+      `${finalReceiverName} (${rutValidation.formatted})`,
       signatureDataUrl,
       isOffline
     );
@@ -421,12 +421,12 @@ export const MobileFieldSimulator: React.FC<FieldOperationsViewProps> = ({
     activeShipment.estado === 'Pendiente'
       ? 1
       : activeShipment.estado === 'Listo para despacho'
-      ? 2
-      : activeShipment.estado === 'En curso'
-      ? 3
-      : activeShipment.estado === 'Llegué'
-      ? 4
-      : 5;
+        ? 2
+        : activeShipment.estado === 'En curso'
+          ? 3
+          : activeShipment.estado === 'Llegué'
+            ? 4
+            : 5;
 
   return (
     <div className="space-y-4">
@@ -471,11 +471,10 @@ export const MobileFieldSimulator: React.FC<FieldOperationsViewProps> = ({
               setIsOffline(true);
             }
           }}
-          className={`px-3.5 py-2.5 rounded-lg text-xs font-semibold flex items-center justify-center gap-2 cursor-pointer transition-colors shrink-0 ${
-            isOffline
+          className={`px-3.5 py-2.5 rounded-lg text-xs font-semibold flex items-center justify-center gap-2 cursor-pointer transition-colors shrink-0 ${isOffline
               ? 'bg-amber-100 text-amber-950 border border-amber-300'
               : 'bg-emerald-50 text-emerald-900 border border-emerald-200'
-          }`}
+            }`}
         >
           {isOffline ? (
             <>
@@ -520,9 +519,8 @@ export const MobileFieldSimulator: React.FC<FieldOperationsViewProps> = ({
             </div>
           </div>
           <ChevronDown
-            className={`w-4 h-4 text-slate-300 shrink-0 transition-transform ${
-              showMobileRouteList ? 'rotate-180' : ''
-            }`}
+            className={`w-4 h-4 text-slate-300 shrink-0 transition-transform ${showMobileRouteList ? 'rotate-180' : ''
+              }`}
           />
         </button>
 
@@ -542,9 +540,8 @@ export const MobileFieldSimulator: React.FC<FieldOperationsViewProps> = ({
                     setQrLookupMessage(null);
                     setShowMobileRouteList(false);
                   }}
-                  className={`w-full text-left p-3.5 transition-colors ${
-                    isSelected ? 'bg-blue-50/80' : 'hover:bg-slate-50'
-                  }`}
+                  className={`w-full text-left p-3.5 transition-colors ${isSelected ? 'bg-blue-50/80' : 'hover:bg-slate-50'
+                    }`}
                 >
                   <div className="flex items-center justify-between gap-2">
                     <span className="font-mono text-xs font-bold text-slate-900">
@@ -588,9 +585,8 @@ export const MobileFieldSimulator: React.FC<FieldOperationsViewProps> = ({
                     setShowIncidentForm(false);
                     setQrLookupMessage(null);
                   }}
-                  className={`w-full text-left p-4 transition-colors cursor-pointer ${
-                    isSelected ? 'bg-blue-50/70' : 'hover:bg-slate-50'
-                  }`}
+                  className={`w-full text-left p-4 transition-colors cursor-pointer ${isSelected ? 'bg-blue-50/70' : 'hover:bg-slate-50'
+                    }`}
                 >
                   <div className="flex items-center justify-between gap-2">
                     <span className="font-mono text-xs font-bold text-slate-900">
@@ -632,13 +628,12 @@ export const MobileFieldSimulator: React.FC<FieldOperationsViewProps> = ({
                 return (
                   <div
                     key={s.step}
-                    className={`py-1.5 px-1 sm:px-2 rounded-lg text-center truncate transition-colors ${
-                      isDone
+                    className={`py-1.5 px-1 sm:px-2 rounded-lg text-center truncate transition-colors ${isDone
                         ? 'bg-emerald-600/30 text-emerald-300 border border-emerald-500/40'
                         : isCurrent
-                        ? 'bg-blue-600 text-white font-bold shadow-xs'
-                        : 'bg-slate-800 text-slate-400'
-                    }`}
+                          ? 'bg-blue-600 text-white font-bold shadow-xs'
+                          : 'bg-slate-800 text-slate-400'
+                      }`}
                   >
                     <span className="sm:hidden">{isDone ? `✓ ${s.short}` : s.short}</span>
                     <span className="hidden sm:inline">{isDone ? `✓ ${s.full}` : s.full}</span>
@@ -907,11 +902,10 @@ export const MobileFieldSimulator: React.FC<FieldOperationsViewProps> = ({
                           key={rel}
                           type="button"
                           onClick={() => setRelationType(rel)}
-                          className={`py-2.5 px-3 text-xs font-semibold rounded-lg border transition-colors cursor-pointer ${
-                            relationType === rel
+                          className={`py-2.5 px-3 text-xs font-semibold rounded-lg border transition-colors cursor-pointer ${relationType === rel
                               ? 'bg-blue-700 text-white border-blue-700'
                               : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
-                          }`}
+                            }`}
                         >
                           {rel}
                         </button>
@@ -1186,11 +1180,10 @@ export const MobileFieldSimulator: React.FC<FieldOperationsViewProps> = ({
                   <button
                     disabled={!canConfirmDelivery}
                     onClick={handleCompleteDeliveryClick}
-                    className={`min-h-[52px] flex-1 py-3.5 px-6 rounded-xl text-sm font-bold flex items-center justify-center gap-2 transition-colors ${
-                      canConfirmDelivery
+                    className={`min-h-[52px] flex-1 py-3.5 px-6 rounded-xl text-sm font-bold flex items-center justify-center gap-2 transition-colors ${canConfirmDelivery
                         ? 'bg-emerald-700 hover:bg-emerald-800 text-white cursor-pointer shadow-xs'
                         : 'bg-slate-200 text-slate-500 cursor-not-allowed'
-                    }`}
+                      }`}
                   >
                     <CheckCircle2 className="w-5 h-5" />
                     Confirmar Entrega y Transferir Custodia

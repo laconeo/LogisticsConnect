@@ -122,11 +122,10 @@ export const InventoryAndIncidentsModule: React.FC<InventoryAndIncidentsModulePr
         <div className="grid grid-cols-3 sm:flex items-center gap-1 p-1 bg-slate-100 rounded-lg">
           <button
             onClick={() => setSubTab('inventario')}
-            className={`px-2 sm:px-3.5 py-1.5 text-[11px] sm:text-xs font-semibold rounded-md transition-colors cursor-pointer text-center truncate flex items-center justify-center gap-1.5 ${
-              subTab === 'inventario'
+            className={`px-2 sm:px-3.5 py-1.5 text-[11px] sm:text-xs font-semibold rounded-md transition-colors cursor-pointer text-center truncate flex items-center justify-center gap-1.5 ${subTab === 'inventario'
                 ? 'bg-white text-slate-900 shadow-xs'
                 : 'text-slate-600 hover:text-slate-900'
-            }`}
+              }`}
           >
             <ClipboardCheck className="w-3.5 h-3.5 shrink-0" />
             <span className="sm:hidden">Inventario</span>
@@ -134,11 +133,10 @@ export const InventoryAndIncidentsModule: React.FC<InventoryAndIncidentsModulePr
           </button>
           <button
             onClick={() => setSubTab('incidentes')}
-            className={`px-2 sm:px-3.5 py-1.5 text-[11px] sm:text-xs font-semibold rounded-md transition-colors cursor-pointer text-center truncate flex items-center justify-center gap-1.5 ${
-              subTab === 'incidentes'
+            className={`px-2 sm:px-3.5 py-1.5 text-[11px] sm:text-xs font-semibold rounded-md transition-colors cursor-pointer text-center truncate flex items-center justify-center gap-1.5 ${subTab === 'incidentes'
                 ? 'bg-white text-slate-900 shadow-xs'
                 : 'text-slate-600 hover:text-slate-900'
-            }`}
+              }`}
           >
             <AlertTriangle className="w-3.5 h-3.5 shrink-0 text-rose-600" />
             <span className="sm:hidden">Incidentes</span>
@@ -148,11 +146,10 @@ export const InventoryAndIncidentsModule: React.FC<InventoryAndIncidentsModulePr
           </button>
           <button
             onClick={() => setSubTab('territorio')}
-            className={`px-2 sm:px-3.5 py-1.5 text-[11px] sm:text-xs font-semibold rounded-md transition-colors cursor-pointer text-center truncate flex items-center justify-center gap-1.5 ${
-              subTab === 'territorio'
+            className={`px-2 sm:px-3.5 py-1.5 text-[11px] sm:text-xs font-semibold rounded-md transition-colors cursor-pointer text-center truncate flex items-center justify-center gap-1.5 ${subTab === 'territorio'
                 ? 'bg-white text-slate-900 shadow-xs'
                 : 'text-slate-600 hover:text-slate-900'
-            }`}
+              }`}
           >
             <MapPin className="w-3.5 h-3.5 shrink-0 text-blue-600" />
             <span className="sm:hidden">Comunas</span>
@@ -234,22 +231,20 @@ export const InventoryAndIncidentsModule: React.FC<InventoryAndIncidentsModulePr
                   <button
                     key={inv.id}
                     onClick={() => setSelectedCampaignId(inv.id)}
-                    className={`w-full text-left p-3 rounded-md border transition-colors cursor-pointer ${
-                      activeCampaign?.id === inv.id
+                    className={`w-full text-left p-3 rounded-md border transition-colors cursor-pointer ${activeCampaign?.id === inv.id
                         ? 'bg-blue-50/60 border-blue-600'
                         : 'bg-white border-slate-200 hover:bg-slate-50'
-                    }`}
+                      }`}
                   >
                     <div className="flex items-center justify-between">
                       <span className="text-xs font-mono font-bold text-slate-900">
                         {inv.id}
                       </span>
                       <span
-                        className={`text-[10px] font-bold uppercase ${
-                          inv.estado === 'Conciliada y Cerrada'
+                        className={`text-[10px] font-bold uppercase ${inv.estado === 'Conciliada y Cerrada'
                             ? 'text-emerald-700'
                             : 'text-amber-700'
-                        }`}
+                          }`}
                       >
                         ● {inv.estado}
                       </span>
@@ -344,12 +339,12 @@ export const InventoryAndIncidentsModule: React.FC<InventoryAndIncidentsModulePr
                         Avance:{' '}
                         {activeCampaign.activos_esperados_ids.length > 0
                           ? Math.round(
-                              (activeCampaign.activos_escaneados_ids.filter((id) =>
-                                activeCampaign.activos_esperados_ids.includes(id)
-                              ).length /
-                                activeCampaign.activos_esperados_ids.length) *
-                                100
-                            )
+                            (activeCampaign.activos_escaneados_ids.filter((id) =>
+                              activeCampaign.activos_esperados_ids.includes(id)
+                            ).length /
+                              activeCampaign.activos_esperados_ids.length) *
+                            100
+                          )
                           : 100}
                         %
                       </span>

@@ -76,11 +76,10 @@ export const TraceabilityAndAuditModule: React.FC<TraceabilityAndAuditModuleProp
         <div className="grid grid-cols-3 sm:flex items-center gap-1 p-1 bg-slate-100 rounded-lg">
           <button
             onClick={() => setSubTab('aprobacion')}
-            className={`px-2 sm:px-3.5 py-1.5 text-[11px] sm:text-xs font-semibold rounded-md transition-colors cursor-pointer text-center truncate flex items-center justify-center gap-1.5 ${
-              subTab === 'aprobacion'
+            className={`px-2 sm:px-3.5 py-1.5 text-[11px] sm:text-xs font-semibold rounded-md transition-colors cursor-pointer text-center truncate flex items-center justify-center gap-1.5 ${subTab === 'aprobacion'
                 ? 'bg-white text-slate-900 shadow-xs'
                 : 'text-slate-600 hover:text-slate-900'
-            }`}
+              }`}
           >
             <ShieldCheck className="w-3.5 h-3.5 shrink-0 text-emerald-600" />
             <span className="sm:hidden">Evidencias</span>
@@ -88,11 +87,10 @@ export const TraceabilityAndAuditModule: React.FC<TraceabilityAndAuditModuleProp
           </button>
           <button
             onClick={() => setSubTab('movimientos')}
-            className={`px-2 sm:px-3.5 py-1.5 text-[11px] sm:text-xs font-semibold rounded-md transition-colors cursor-pointer text-center truncate flex items-center justify-center gap-1.5 ${
-              subTab === 'movimientos'
+            className={`px-2 sm:px-3.5 py-1.5 text-[11px] sm:text-xs font-semibold rounded-md transition-colors cursor-pointer text-center truncate flex items-center justify-center gap-1.5 ${subTab === 'movimientos'
                 ? 'bg-white text-slate-900 shadow-xs'
                 : 'text-slate-600 hover:text-slate-900'
-            }`}
+              }`}
           >
             <History className="w-3.5 h-3.5 shrink-0 text-blue-600" />
             <span className="sm:hidden">Movimientos</span>
@@ -100,11 +98,10 @@ export const TraceabilityAndAuditModule: React.FC<TraceabilityAndAuditModuleProp
           </button>
           <button
             onClick={() => setSubTab('auditoria')}
-            className={`px-2 sm:px-3.5 py-1.5 text-[11px] sm:text-xs font-semibold rounded-md transition-colors cursor-pointer text-center truncate flex items-center justify-center gap-1.5 ${
-              subTab === 'auditoria'
+            className={`px-2 sm:px-3.5 py-1.5 text-[11px] sm:text-xs font-semibold rounded-md transition-colors cursor-pointer text-center truncate flex items-center justify-center gap-1.5 ${subTab === 'auditoria'
                 ? 'bg-white text-slate-900 shadow-xs'
                 : 'text-slate-600 hover:text-slate-900'
-            }`}
+              }`}
           >
             <Lock className="w-3.5 h-3.5 shrink-0 text-amber-600" />
             <span className="sm:hidden">Bitácora</span>
@@ -170,13 +167,12 @@ export const TraceabilityAndAuditModule: React.FC<TraceabilityAndAuditModuleProp
                       </div>
                       <div className="text-right">
                         <span
-                          className={`text-xs font-semibold block ${
-                            sh.estado_revision_evidencia === 'Aprobada'
+                          className={`text-xs font-semibold block ${sh.estado_revision_evidencia === 'Aprobada'
                               ? 'text-emerald-700'
                               : sh.estado_revision_evidencia === 'Reintento solicitado'
-                              ? 'text-rose-700'
-                              : 'text-amber-700'
-                          }`}
+                                ? 'text-rose-700'
+                                : 'text-amber-700'
+                            }`}
                         >
                           ● {sh.estado_revision_evidencia}
                         </span>
@@ -294,7 +290,7 @@ export const TraceabilityAndAuditModule: React.FC<TraceabilityAndAuditModuleProp
                               sh.id,
                               'Aprobada',
                               reviewComments[sh.id] ||
-                                'Documentación y evidencias fotográficas conformes.'
+                              'Documentación y evidencias fotográficas conformes.'
                             )
                           }
                           className="flex-1 py-2 px-3 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
@@ -308,7 +304,7 @@ export const TraceabilityAndAuditModule: React.FC<TraceabilityAndAuditModuleProp
                               sh.id,
                               'Reintento solicitado',
                               reviewComments[sh.id] ||
-                                'Se solicita volver a capturar fotografía legible del remito firmado.'
+                              'Se solicita volver a capturar fotografía legible del remito firmado.'
                             )
                           }
                           className="flex-1 py-2 px-3 bg-white border border-rose-300 hover:bg-rose-50 text-rose-700 text-xs font-semibold rounded transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
