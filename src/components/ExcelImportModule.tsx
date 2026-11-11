@@ -140,11 +140,11 @@ export const ExcelImportModule: React.FC<ExcelImportModuleProps> = ({
 
   return (
     <div className="space-y-6">
-      {/* Header Card */}
-      <div className="bg-white border border-slate-200/80 rounded-lg p-6 shadow-xs">
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-slate-200 pb-5">
+      {/* Header Card — Apple Card Style */}
+      <div className="apple-card rounded-2xl border border-slate-200/80 p-5 sm:p-6 shadow-xs">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-slate-200/80 pb-5">
           <div>
-            <span className="text-[11px] font-mono uppercase tracking-widest text-blue-600 font-semibold block">
+            <span className="text-[11px] font-mono uppercase tracking-widest text-[#007AFF] font-bold block">
               Carga Masiva de Unidades y Envíos
             </span>
             <h2 className="text-lg font-bold text-slate-900 mt-0.5">
@@ -155,7 +155,7 @@ export const ExcelImportModule: React.FC<ExcelImportModuleProps> = ({
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2.5 shrink-0">
+          <div className="flex flex-wrap items-center gap-2 shrink-0">
             <input
               ref={fileInputRef}
               type="file"
@@ -165,28 +165,28 @@ export const ExcelImportModule: React.FC<ExcelImportModuleProps> = ({
             />
             <button
               onClick={handleDownloadTemplate}
-              className="px-3 py-2 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-semibold rounded-md transition-colors flex items-center gap-1.5 whitespace-nowrap cursor-pointer"
+              className="px-3.5 py-2 bg-white border border-slate-200/80 hover:bg-slate-50 text-slate-700 text-xs font-semibold rounded-xl transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer shadow-xs active:scale-95"
             >
               <Download className="w-3.5 h-3.5 text-slate-500" />
               Plantilla CSV
             </button>
             <button
               onClick={() => setShowPasteBox(!showPasteBox)}
-              className="px-3 py-2 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-semibold rounded-md transition-colors flex items-center gap-1.5 whitespace-nowrap cursor-pointer"
+              className="px-3.5 py-2 bg-white border border-slate-200/80 hover:bg-slate-50 text-slate-700 text-xs font-semibold rounded-xl transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer shadow-xs active:scale-95"
             >
-              <ClipboardPaste className="w-3.5 h-3.5 text-blue-600" />
+              <ClipboardPaste className="w-3.5 h-3.5 text-[#007AFF]" />
               Pegar desde Excel
             </button>
             <button
               onClick={() => fileInputRef.current?.click()}
-              className="px-3 py-2 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 text-xs font-semibold rounded-md transition-colors flex items-center gap-1.5 whitespace-nowrap cursor-pointer"
+              className="px-3.5 py-2 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 text-xs font-semibold rounded-xl transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer shadow-xs active:scale-95"
             >
-              <Upload className="w-3.5 h-3.5 text-blue-600" />
+              <Upload className="w-3.5 h-3.5 text-[#007AFF]" />
               Subir Archivo CSV
             </button>
             <button
               onClick={handleAddRow}
-              className="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold rounded-md transition-colors flex items-center gap-1.5 whitespace-nowrap cursor-pointer"
+              className="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold rounded-xl transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer active:scale-95"
             >
               <Plus className="w-3.5 h-3.5" />
               Agregar Fila
@@ -195,7 +195,7 @@ export const ExcelImportModule: React.FC<ExcelImportModuleProps> = ({
         </div>
 
         {showPasteBox && (
-          <div className="mt-4 p-4 bg-slate-50 border border-slate-200 rounded-lg space-y-3">
+          <div className="mt-4 p-4 bg-slate-50/90 border border-slate-200/80 rounded-2xl space-y-3">
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold text-slate-800">
                 Pegar Celdas desde Microsoft Excel (Separadas por Tabulación o Punto y Coma)
@@ -209,20 +209,20 @@ export const ExcelImportModule: React.FC<ExcelImportModuleProps> = ({
               value={pasteContent}
               onChange={(e) => setPasteContent(e.target.value)}
               placeholder={`514820\tEstaca Santiago Peñalolén\tRoberto Morales Vega\t12.845.392-4\t+56 9 8412 5530\trmoralesv@iglesiajesucristo.org\tAv. Consistorial 2840\tPeñalolén\tSantiago`}
-              className="w-full p-3 text-xs font-mono bg-white border border-slate-300 rounded-md focus:outline-none focus:border-blue-600"
+              className="w-full p-3 text-xs font-mono bg-white border border-slate-300/80 rounded-xl focus:outline-none focus:border-[#007AFF] focus:ring-2 focus:ring-[#007AFF]/20 transition-all"
             />
             <div className="flex justify-end gap-2">
               <button
                 type="button"
                 onClick={() => setShowPasteBox(false)}
-                className="px-3 py-1.5 text-xs font-semibold text-slate-600"
+                className="px-3.5 py-1.5 text-xs font-semibold text-slate-600 hover:text-slate-900 cursor-pointer"
               >
                 Cancelar
               </button>
               <button
                 type="button"
                 onClick={handlePasteSubmit}
-                className="px-4 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-md cursor-pointer"
+                className="px-4 py-2 bg-[#007AFF] hover:bg-[#0066d6] text-white text-xs font-semibold rounded-xl cursor-pointer shadow-sm active:scale-95 transition-all"
               >
                 Procesar Filas Pegadas
               </button>
@@ -233,7 +233,7 @@ export const ExcelImportModule: React.FC<ExcelImportModuleProps> = ({
         {/* Summary & Actions */}
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 pt-5">
           <div className="flex items-center gap-3">
-            <div className="flex-1 sm:flex-none px-4 py-2 bg-emerald-50 border border-emerald-200 rounded-lg text-right">
+            <div className="flex-1 sm:flex-none px-4 py-2 bg-emerald-50 border border-emerald-200/80 rounded-xl text-right">
               <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-700 block">
                 Filas Válidas
               </span>
@@ -241,7 +241,7 @@ export const ExcelImportModule: React.FC<ExcelImportModuleProps> = ({
                 {validRows.length} / {activeValidations.length}
               </span>
             </div>
-            <div className="flex-1 sm:flex-none px-4 py-2 bg-rose-50 border border-rose-200 rounded-lg text-right">
+            <div className="flex-1 sm:flex-none px-4 py-2 bg-rose-50 border border-rose-200/80 rounded-xl text-right">
               <span className="text-[10px] font-bold uppercase tracking-wider text-rose-700 block">
                 Observadas
               </span>
@@ -260,7 +260,7 @@ export const ExcelImportModule: React.FC<ExcelImportModuleProps> = ({
                     'Se normalizaron automáticamente las comunas sugeridas, formatos de RUT y correos observados.'
                   );
                 }}
-                className="w-full sm:w-auto justify-center px-4 py-2.5 bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold rounded-lg transition-colors flex items-center gap-2 cursor-pointer shadow-xs"
+                className="w-full sm:w-auto justify-center px-4 py-2.5 bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold rounded-xl transition-all flex items-center gap-2 cursor-pointer shadow-sm active:scale-95"
               >
                 <Wand2 className="w-4 h-4" />
                 Normalizar Automáticamente ({invalidCount} filas)
@@ -276,7 +276,7 @@ export const ExcelImportModule: React.FC<ExcelImportModuleProps> = ({
                 );
               }}
               disabled={validRows.length === 0}
-              className="w-full sm:w-auto justify-center px-4 py-2.5 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-200 disabled:text-slate-400 text-white text-xs font-semibold rounded-lg transition-colors flex items-center gap-2 cursor-pointer shadow-xs"
+              className="w-full sm:w-auto justify-center px-4 py-2.5 bg-[#007AFF] hover:bg-[#0066d6] disabled:bg-slate-200 disabled:text-slate-400 text-white text-xs font-semibold rounded-xl transition-all flex items-center gap-2 cursor-pointer shadow-sm active:scale-95"
             >
               <FileSpreadsheet className="w-4 h-4" />
               Confirmar e Importar {validRows.length} Filas Válidas
@@ -285,7 +285,7 @@ export const ExcelImportModule: React.FC<ExcelImportModuleProps> = ({
         </div>
 
         {batchNotice && (
-          <div className="mt-4 p-3 bg-emerald-50 border border-emerald-200 rounded-md flex items-center justify-between text-xs text-emerald-900">
+          <div className="mt-4 p-3.5 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center justify-between text-xs text-emerald-900">
             <span className="font-semibold flex items-center gap-2">
               <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
               {batchNotice}
@@ -301,8 +301,8 @@ export const ExcelImportModule: React.FC<ExcelImportModuleProps> = ({
       </div>
 
       {/* Validation Table */}
-      <div className="bg-white border border-slate-200/80 rounded-lg shadow-xs overflow-hidden">
-        <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between">
+      <div className="apple-card rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden">
+        <div className="px-6 py-4 border-b border-slate-200/80 flex items-center justify-between">
           <h3 className="text-sm font-bold text-slate-900">
             Revisión y Corrección en Línea de Planilla
           </h3>

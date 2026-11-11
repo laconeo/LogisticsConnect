@@ -1348,7 +1348,7 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] text-[#0F172A] flex flex-col font-sans antialiased pb-24 md:pb-8 selection:bg-[#007AFF] selection:text-white">
+    <div className="min-h-screen bg-[#F2F2F7] text-[#0F172A] flex flex-col font-sans antialiased pb-24 md:pb-8 selection:bg-[#007AFF] selection:text-white">
       {/* =====================================================================
           HEADER DE NAVEGACIÓN APPLE LIQUID GLASS (HIG)
       ===================================================================== */}
@@ -1566,209 +1566,6 @@ export default function App() {
             </div>
           </div>
         </div>
-
-        {/* Modal Drawer Desplegable Móvil (iOS Modal Sheet) */}
-        {mobileMenuOpen && (
-          <div className="md:hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-md flex flex-col justify-end animate-in fade-in duration-200">
-            <div className="apple-glass-dark border-t border-white/15 p-5 space-y-4 max-h-[88vh] overflow-y-auto rounded-t-[28px] shadow-2xl safe-bottom">
-              {/* iOS Sheet Drag Handle */}
-              <div className="w-10 h-1 bg-white/20 rounded-full mx-auto -mt-1 mb-2" />
-
-              {/* Header Drawer con Botón Cerrar */}
-              <div className="flex items-center justify-between border-b border-white/10 pb-3">
-                <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-full bg-[#007AFF] text-white flex items-center justify-center font-bold text-xs shadow-sm ring-1 ring-white/20">
-                    {currentUser.nombre.charAt(0)}
-                  </div>
-                  <div>
-                    <div className="text-sm font-bold text-white truncate max-w-[200px]">
-                      {currentUser.nombre}
-                    </div>
-                    <div className="text-[11px] text-blue-400 font-medium">
-                      {currentUser.rol_etiqueta} · {currentUser.organizacion}
-                    </div>
-                  </div>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white flex items-center justify-center cursor-pointer transition-colors"
-                  aria-label="Cerrar menú"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
-
-              {/* Selector de Rol / Cuentas en Móvil (iOS Grouped Style) */}
-              <div className="space-y-1.5">
-                <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block px-1">
-                  Cambiar Rol Operativo / Cuenta Demo
-                </label>
-                <div className="relative">
-                  <UserCheck className="w-4 h-4 text-[#007AFF] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
-                  <select
-                    value={currentUserId}
-                    onChange={(e) => handleSelectUserAccount(e.target.value)}
-                    className="w-full pl-10 pr-3 py-2.5 bg-white/5 border border-white/10 rounded-xl text-xs font-semibold text-white focus:outline-none focus:border-[#007AFF] focus:ring-1 focus:ring-[#007AFF]"
-                  >
-                    {users.map((u) => (
-                      <option key={u.id} value={u.id} className="bg-slate-900 text-white">
-                        {u.nombre} — {u.rol_etiqueta}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-
-              {/* Selector de País en Móvil (iOS Segmented Grid) */}
-              <div className="space-y-1.5">
-                <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-slate-400 px-1">
-                  <span>País Operativo</span>
-                  {!activeRolePerms.canSwitchCountries && (
-                    <span className="text-amber-400 lowercase text-[10px] font-normal">
-                      (Restringido a su país por rol)
-                    </span>
-                  )}
-                </div>
-                <div className="grid grid-cols-4 gap-1.5 p-1 bg-white/5 rounded-xl border border-white/10">
-                  {COUNTRY_SUMMARIES.map((c) => {
-                    const isAllowedCountry =
-                      activeRolePerms.canSwitchCountries ||
-                      c.codigo === currentUser.pais;
-                    return (
-                      <button
-                        key={c.codigo}
-                        disabled={!isAllowedCountry}
-                        onClick={() => {
-                          if (isAllowedCountry) {
-                            setSelectedCountry(c.codigo);
-                            setMobileMenuOpen(false);
-                          }
-                        }}
-                        className={`py-2 px-1.5 rounded-lg text-xs font-bold transition-all text-center flex flex-col items-center justify-center gap-0.5 ${selectedCountry === c.codigo
-                            ? 'bg-[#007AFF] text-white shadow-sm'
-                            : isAllowedCountry
-                              ? 'text-slate-300 hover:text-white hover:bg-white/10'
-                              : 'text-slate-600 opacity-40 cursor-not-allowed'
-                          }`}
-                      >
-                        <span>{c.codigo}</span>
-                        <span className="text-[9px] font-normal opacity-80 truncate max-w-[60px]">
-                          {c.nombre}
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Lista Completa de Pantallas Autorizadas (iOS Grouped List) */}
-              <div className="space-y-1.5">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block px-1">
-                  Instancias Habilitadas ({allowedLogisticsStages.length} de 6)
-                </span>
-                <div className="space-y-1.5">
-                  {allowedLogisticsStages.map((stage) => {
-                    const Icon = stage.icon;
-                    const isActive = activeModule === stage.id;
-                    return (
-                      <button
-                        key={stage.id}
-                        type="button"
-                        onClick={() => {
-                          setActiveModule(stage.id);
-                          setMobileMenuOpen(false);
-                        }}
-                        className={`w-full p-3 rounded-2xl border text-left flex items-center justify-between transition-all active:scale-[0.98] ${isActive
-                            ? 'bg-[#007AFF] text-white border-blue-400/50 shadow-md ring-1 ring-white/20'
-                            : 'bg-white/5 text-slate-200 border-white/10 hover:bg-white/10'
-                          }`}
-                      >
-                        <div className="flex items-center gap-3 min-w-0">
-                          <div className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 ${isActive ? 'bg-white/20 text-white' : 'bg-white/10 text-blue-400'}`}>
-                            <Icon className="w-4 h-4" />
-                          </div>
-                          <div className="min-w-0">
-                            <div className="text-xs font-bold truncate">
-                              {stage.title}
-                            </div>
-                            <div
-                              className={`text-[11px] truncate ${isActive ? 'text-blue-100' : 'text-slate-400'
-                                }`}
-                            >
-                              {stage.subtitle}
-                            </div>
-                          </div>
-                        </div>
-                        <span className={`text-xs font-mono font-bold shrink-0 ml-2 px-2 py-0.5 rounded-lg ${isActive ? 'bg-black/25 text-white' : 'bg-white/10 text-slate-300'}`}>
-                          {stage.badge}
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Acciones de Administrador & Sistema */}
-              <div className="pt-2 border-t border-white/10 space-y-2">
-                {currentUser.rol === 'ADMIN_REGIONAL' && (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setShowUserModal(true);
-                      setMobileMenuOpen(false);
-                    }}
-                    className="w-full p-3 rounded-2xl border border-rose-500/30 bg-rose-950/40 hover:bg-rose-900/50 text-rose-200 text-left flex items-center justify-between transition-colors active:scale-[0.98]"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center shrink-0">
-                        <UserPlus className="w-4 h-4" />
-                      </div>
-                      <div>
-                        <div className="text-xs font-bold">Gestión y Alta de Usuarios</div>
-                        <div className="text-[11px] text-rose-300">
-                          Solo perfil Administrador Regional
-                        </div>
-                      </div>
-                    </div>
-                  </button>
-                )}
-
-                {activeRolePerms.canManageDb && (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setShowDbModal(true);
-                      setMobileMenuOpen(false);
-                    }}
-                    className="w-full p-3 rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 text-slate-200 text-left flex items-center justify-between transition-colors active:scale-[0.98]"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
-                        <Database className="w-4 h-4" />
-                      </div>
-                      <div>
-                        <div className="text-xs font-bold">Base de Datos y SQL</div>
-                        <div className="text-[11px] text-slate-400">
-                          Exportar CSV, DDL y sincronizar
-                        </div>
-                      </div>
-                    </div>
-                  </button>
-                )}
-
-                <button
-                  type="button"
-                  onClick={handleLogout}
-                  className="w-full p-2.5 rounded-lg border border-slate-800 text-rose-400 hover:bg-rose-950/40 text-xs font-semibold flex items-center justify-center gap-2 cursor-pointer"
-                >
-                  <LogOut className="w-4 h-4" />
-                  Cerrar Sesión
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
       </header>
 
       {/* Banner de Permisos y Ámbito del Rol Activo */}
@@ -2296,11 +2093,11 @@ export default function App() {
       </main>
 
       {/* =====================================================================
-          BARRA DE NAVEGACIÓN INFERIOR APPLE LIQUID GLASS (md:hidden)
-          Con blur 24px, safe-area-inset-bottom, active pill tint e iconos refinados
+          BARRA DE NAVEGACIÓN INFERIOR APPLE LIQUID GLASS (HIG iOS Tab Bar)
+          Translúcida blanca, con safe-area y activo en #007AFF
       ===================================================================== */}
       <nav
-        className="md:hidden fixed bottom-0 inset-x-0 z-40 apple-glass-dark border-t border-white/10 text-white shadow-2xl safe-bottom"
+        className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white/85 backdrop-blur-xl border-t border-slate-200/80 text-slate-500 shadow-[0_-4px_20px_rgba(0,0,0,0.04)] safe-bottom"
       >
         <div
           className={`grid h-[58px] px-1.5 items-center ${allowedLogisticsStages.length <= 4
@@ -2329,11 +2126,11 @@ export default function App() {
                 }}
                 className={`flex flex-col items-center justify-center py-1 transition-all rounded-xl cursor-pointer active:scale-95 ${isActive
                     ? 'text-[#007AFF] font-bold'
-                    : 'text-slate-400 hover:text-slate-200'
+                    : 'text-slate-500 hover:text-slate-900'
                   }`}
               >
                 <div
-                  className={`p-1.5 rounded-xl transition-all ${isActive ? 'bg-[#007AFF]/20 text-[#007AFF] ring-1 ring-[#007AFF]/30' : ''
+                  className={`p-1.5 rounded-xl transition-all ${isActive ? 'bg-[#007AFF]/12 text-[#007AFF]' : ''
                     }`}
                 >
                   <Icon className="w-5 h-5" />
@@ -2352,12 +2149,12 @@ export default function App() {
               onClick={() => setMobileMenuOpen(true)}
               className={`flex flex-col items-center justify-center py-1 transition-all rounded-xl cursor-pointer active:scale-95 ${allowedLogisticsStages.slice(4).some((s) => s.id === activeModule)
                   ? 'text-[#007AFF] font-bold'
-                  : 'text-slate-400 hover:text-slate-200'
+                  : 'text-slate-500 hover:text-slate-900'
                 }`}
             >
               <div
                 className={`p-1.5 rounded-xl transition-all ${allowedLogisticsStages.slice(4).some((s) => s.id === activeModule)
-                    ? 'bg-[#007AFF]/20 text-[#007AFF] ring-1 ring-[#007AFF]/30'
+                    ? 'bg-[#007AFF]/12 text-[#007AFF]'
                     : ''
                   }`}
               >
@@ -2696,6 +2493,236 @@ export default function App() {
           onToggleUserStatus={handleToggleUserStatus}
           onClose={() => setShowUserModal(false)}
         />
+      )}
+
+      {/* =====================================================================
+          MODAL DRAWER DESPLEGABLE MÓVIL (iOS Action Sheet HIG)
+          Montado a nivel raíz con z-[100] para garantizar que NINGÚN elemento
+          lo tape o confine por contextos de apilamiento (stacking contexts)
+      ===================================================================== */}
+      {mobileMenuOpen && (
+        <div className="md:hidden fixed inset-0 z-[100] bg-black/50 backdrop-blur-sm flex flex-col justify-end animate-in fade-in duration-200">
+          {/* Backdrop click to dismiss */}
+          <div
+            className="fixed inset-0"
+            onClick={() => setMobileMenuOpen(false)}
+            aria-label="Cerrar modal"
+          />
+
+          {/* Sheet Container */}
+          <div className="relative bg-[#F2F2F7] text-slate-900 border-t border-slate-200/80 p-5 space-y-4 max-h-[88vh] overflow-y-auto rounded-t-[32px] shadow-2xl safe-bottom z-10">
+            {/* iOS Sheet Drag Handle */}
+            <div className="w-10 h-1.5 bg-slate-400/40 rounded-full mx-auto -mt-1 mb-2" />
+
+            {/* Header Drawer con Usuario y Botón Cerrar */}
+            <div className="flex items-center justify-between pb-1">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-[#007AFF] text-white flex items-center justify-center font-bold text-sm shadow-sm ring-2 ring-white">
+                  {currentUser.nombre.charAt(0)}
+                </div>
+                <div>
+                  <div className="text-sm font-bold text-slate-900 truncate max-w-[200px]">
+                    {currentUser.nombre}
+                  </div>
+                  <div className="text-[11px] text-[#007AFF] font-medium">
+                    {currentUser.rol_etiqueta} · {currentUser.organizacion}
+                  </div>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setMobileMenuOpen(false)}
+                className="w-8 h-8 rounded-full bg-slate-200 hover:bg-slate-300 text-slate-700 flex items-center justify-center cursor-pointer transition-colors"
+                aria-label="Cerrar menú"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Selector de Rol / Cuentas en Móvil (iOS Grouped Card) */}
+            <div className="bg-white rounded-2xl p-3 border border-slate-200/80 shadow-xs space-y-1.5">
+              <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block px-1">
+                Cambiar Rol Operativo / Cuenta Demo
+              </label>
+              <div className="relative">
+                <UserCheck className="w-4 h-4 text-[#007AFF] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <select
+                  value={currentUserId}
+                  onChange={(e) => handleSelectUserAccount(e.target.value)}
+                  className="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-200/80 rounded-xl text-xs font-semibold text-slate-900 focus:outline-none focus:border-[#007AFF] focus:ring-1 focus:ring-[#007AFF]"
+                >
+                  {users.map((u) => (
+                    <option key={u.id} value={u.id}>
+                      {u.nombre} — {u.rol_etiqueta}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            {/* Selector de País en Móvil (iOS Segmented Grid) */}
+            <div className="bg-white rounded-2xl p-3 border border-slate-200/80 shadow-xs space-y-1.5">
+              <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-slate-400 px-1">
+                <span>País Operativo</span>
+                {!activeRolePerms.canSwitchCountries && (
+                  <span className="text-amber-600 lowercase text-[10px] font-normal">
+                    (Restringido a su país por rol)
+                  </span>
+                )}
+              </div>
+              <div className="grid grid-cols-4 gap-1.5 p-1 bg-slate-100 rounded-xl">
+                {COUNTRY_SUMMARIES.map((c) => {
+                  const isAllowedCountry =
+                    activeRolePerms.canSwitchCountries ||
+                    c.codigo === currentUser.pais;
+                  return (
+                    <button
+                      key={c.codigo}
+                      disabled={!isAllowedCountry}
+                      onClick={() => {
+                        if (isAllowedCountry) {
+                          setSelectedCountry(c.codigo);
+                          setMobileMenuOpen(false);
+                        }
+                      }}
+                      className={`py-2 px-1 rounded-lg text-xs font-bold transition-all text-center flex flex-col items-center justify-center gap-0.5 ${
+                        selectedCountry === c.codigo
+                          ? 'bg-[#007AFF] text-white shadow-sm'
+                          : isAllowedCountry
+                            ? 'text-slate-700 hover:text-slate-900 hover:bg-white/60'
+                            : 'text-slate-400 opacity-40 cursor-not-allowed'
+                      }`}
+                    >
+                      <span>{c.codigo}</span>
+                      <span className="text-[9px] font-normal opacity-80 truncate max-w-[55px]">
+                        {c.nombre}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Lista Completa de Pantallas Autorizadas (iOS Grouped List) */}
+            <div className="bg-white rounded-2xl p-3 border border-slate-200/80 shadow-xs space-y-2">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block px-1">
+                Instancias Habilitadas ({allowedLogisticsStages.length} de 6)
+              </span>
+              <div className="space-y-1.5">
+                {allowedLogisticsStages.map((stage) => {
+                  const Icon = stage.icon;
+                  const isActive = activeModule === stage.id;
+                  return (
+                    <button
+                      key={stage.id}
+                      type="button"
+                      onClick={() => {
+                        setActiveModule(stage.id);
+                        setMobileMenuOpen(false);
+                      }}
+                      className={`w-full p-2.5 rounded-xl border text-left flex items-center justify-between transition-all active:scale-[0.98] ${
+                        isActive
+                          ? 'bg-[#007AFF] text-white border-blue-500 shadow-sm'
+                          : 'bg-slate-50 text-slate-800 border-slate-200/60 hover:bg-slate-100'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        <div
+                          className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${
+                            isActive
+                              ? 'bg-white/20 text-white'
+                              : 'bg-blue-50 text-[#007AFF]'
+                          }`}
+                        >
+                          <Icon className="w-4 h-4" />
+                        </div>
+                        <div className="min-w-0">
+                          <div className="text-xs font-bold truncate">
+                            {stage.title}
+                          </div>
+                          <div
+                            className={`text-[10px] truncate ${
+                              isActive ? 'text-blue-100' : 'text-slate-500'
+                            }`}
+                          >
+                            {stage.subtitle}
+                          </div>
+                        </div>
+                      </div>
+                      <span
+                        className={`text-xs font-mono font-bold shrink-0 ml-2 px-2 py-0.5 rounded-md ${
+                          isActive
+                            ? 'bg-black/20 text-white'
+                            : 'bg-slate-200/80 text-slate-700'
+                        }`}
+                      >
+                        {stage.badge}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Acciones de Administrador & Sistema */}
+            <div className="space-y-2 pt-1">
+              {currentUser.rol === 'ADMIN_REGIONAL' && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowUserModal(true);
+                    setMobileMenuOpen(false);
+                  }}
+                  className="w-full p-3 rounded-2xl border border-rose-200 bg-rose-50 hover:bg-rose-100/70 text-rose-900 text-left flex items-center justify-between transition-colors active:scale-[0.98]"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-xl bg-rose-200 text-rose-700 flex items-center justify-center shrink-0">
+                      <UserPlus className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <div className="text-xs font-bold">Gestión y Alta de Usuarios</div>
+                      <div className="text-[11px] text-rose-700">
+                        Solo perfil Administrador Regional
+                      </div>
+                    </div>
+                  </div>
+                </button>
+              )}
+
+              {activeRolePerms.canManageDb && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowDbModal(true);
+                    setMobileMenuOpen(false);
+                  }}
+                  className="w-full p-3 rounded-2xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-800 text-left flex items-center justify-between transition-colors active:scale-[0.98] shadow-xs"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
+                      <Database className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <div className="text-xs font-bold">Base de Datos y SQL</div>
+                      <div className="text-[11px] text-slate-500">
+                        Exportar CSV, DDL y sincronizar
+                      </div>
+                    </div>
+                  </div>
+                </button>
+              )}
+
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="w-full p-3 rounded-2xl bg-white border border-rose-200 text-rose-600 hover:bg-rose-50 text-xs font-bold flex items-center justify-center gap-2 cursor-pointer shadow-xs active:scale-[0.98]"
+              >
+                <LogOut className="w-4 h-4" />
+                Cerrar Sesión
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
