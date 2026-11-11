@@ -71,13 +71,13 @@ export const TraceabilityAndAuditModule: React.FC<TraceabilityAndAuditModuleProp
 
   return (
     <div className="space-y-5">
-      {/* Sub-navigation Hallmark */}
-      <div className="bg-white border border-slate-200 rounded-xl p-3 sm:p-4 shadow-xs flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
-        <div className="grid grid-cols-3 sm:flex items-center gap-1 p-1 bg-slate-100 rounded-lg">
+      {/* Sub-navigation Apple Segmented Control */}
+      <div className="apple-card rounded-2xl border border-slate-200/80 p-3 sm:p-4 shadow-xs flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+        <div className="grid grid-cols-3 sm:flex items-center gap-1 p-1 bg-slate-100 rounded-xl">
           <button
             onClick={() => setSubTab('aprobacion')}
-            className={`px-2 sm:px-3.5 py-1.5 text-[11px] sm:text-xs font-semibold rounded-md transition-colors cursor-pointer text-center truncate flex items-center justify-center gap-1.5 ${subTab === 'aprobacion'
-                ? 'bg-white text-slate-900 shadow-xs'
+            className={`px-3 sm:px-4 py-2 text-[11px] sm:text-xs font-semibold rounded-lg transition-all cursor-pointer text-center truncate flex items-center justify-center gap-1.5 ${subTab === 'aprobacion'
+                ? 'bg-white text-slate-900 shadow-sm font-bold'
                 : 'text-slate-600 hover:text-slate-900'
               }`}
           >
@@ -87,19 +87,19 @@ export const TraceabilityAndAuditModule: React.FC<TraceabilityAndAuditModuleProp
           </button>
           <button
             onClick={() => setSubTab('movimientos')}
-            className={`px-2 sm:px-3.5 py-1.5 text-[11px] sm:text-xs font-semibold rounded-md transition-colors cursor-pointer text-center truncate flex items-center justify-center gap-1.5 ${subTab === 'movimientos'
-                ? 'bg-white text-slate-900 shadow-xs'
+            className={`px-3 sm:px-4 py-2 text-[11px] sm:text-xs font-semibold rounded-lg transition-all cursor-pointer text-center truncate flex items-center justify-center gap-1.5 ${subTab === 'movimientos'
+                ? 'bg-white text-slate-900 shadow-sm font-bold'
                 : 'text-slate-600 hover:text-slate-900'
               }`}
           >
-            <History className="w-3.5 h-3.5 shrink-0 text-blue-600" />
+            <History className="w-3.5 h-3.5 shrink-0 text-[#007AFF]" />
             <span className="sm:hidden">Movimientos</span>
             <span className="hidden sm:inline">Historial Movimientos ({movements.length})</span>
           </button>
           <button
             onClick={() => setSubTab('auditoria')}
-            className={`px-2 sm:px-3.5 py-1.5 text-[11px] sm:text-xs font-semibold rounded-md transition-colors cursor-pointer text-center truncate flex items-center justify-center gap-1.5 ${subTab === 'auditoria'
-                ? 'bg-white text-slate-900 shadow-xs'
+            className={`px-3 sm:px-4 py-2 text-[11px] sm:text-xs font-semibold rounded-lg transition-all cursor-pointer text-center truncate flex items-center justify-center gap-1.5 ${subTab === 'auditoria'
+                ? 'bg-white text-slate-900 shadow-sm font-bold'
                 : 'text-slate-600 hover:text-slate-900'
               }`}
           >
@@ -111,13 +111,13 @@ export const TraceabilityAndAuditModule: React.FC<TraceabilityAndAuditModuleProp
 
         {subTab !== 'aprobacion' && (
           <div className="relative w-full sm:w-72">
-            <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+            <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
             <input
               type="text"
               value={searchFilter}
               onChange={(e) => setSearchFilter(e.target.value)}
               placeholder="Buscar por activo, usuario..."
-              className="w-full pl-8 pr-3 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:bg-white focus:outline-none focus:border-blue-600"
+              className="w-full pl-9 pr-3 py-2 text-xs bg-slate-100/80 hover:bg-slate-100 focus:bg-white border border-slate-200/80 rounded-xl focus:outline-none focus:border-[#007AFF] focus:ring-2 focus:ring-[#007AFF]/20 transition-all font-medium"
             />
           </div>
         )}

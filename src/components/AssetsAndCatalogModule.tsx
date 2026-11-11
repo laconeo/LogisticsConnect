@@ -184,14 +184,14 @@ export const AssetsAndCatalogModule: React.FC<AssetsAndCatalogModuleProps> = ({
 
   return (
     <div className="space-y-5">
-      {/* Sub-navigation bar */}
-      <div className="bg-white border border-slate-200 rounded-xl p-3 sm:p-4 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 shadow-xs">
-        <div className="grid grid-cols-3 sm:flex items-center gap-1 p-1 bg-slate-100 rounded-lg">
+      {/* Sub-navigation bar — Apple Segmented Control */}
+      <div className="apple-card rounded-2xl border border-slate-200/80 p-3 sm:p-4 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 shadow-xs">
+        <div className="grid grid-cols-3 sm:flex items-center gap-1 p-1 bg-slate-100 rounded-xl">
           <button
             onClick={() => setSubView('INVENTARIO')}
-            className={`px-2.5 sm:px-3.5 py-1.5 text-[11px] sm:text-xs font-semibold rounded-md transition-colors cursor-pointer text-center truncate ${
+            className={`px-3 sm:px-4 py-2 text-[11px] sm:text-xs font-semibold rounded-lg transition-all cursor-pointer text-center truncate ${
               subView === 'INVENTARIO'
-                ? 'bg-white text-slate-900 shadow-xs'
+                ? 'bg-white text-slate-900 shadow-sm font-bold'
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
@@ -200,9 +200,9 @@ export const AssetsAndCatalogModule: React.FC<AssetsAndCatalogModuleProps> = ({
           </button>
           <button
             onClick={() => setSubView('ALTA_ACTIVO')}
-            className={`px-2.5 sm:px-3.5 py-1.5 text-[11px] sm:text-xs font-semibold rounded-md transition-colors cursor-pointer text-center truncate ${
+            className={`px-3 sm:px-4 py-2 text-[11px] sm:text-xs font-semibold rounded-lg transition-all cursor-pointer text-center truncate ${
               subView === 'ALTA_ACTIVO'
-                ? 'bg-white text-slate-900 shadow-xs'
+                ? 'bg-white text-slate-900 shadow-sm font-bold'
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
@@ -211,9 +211,9 @@ export const AssetsAndCatalogModule: React.FC<AssetsAndCatalogModuleProps> = ({
           </button>
           <button
             onClick={() => setSubView('TIPOS_ACTIVO')}
-            className={`px-2.5 sm:px-3.5 py-1.5 text-[11px] sm:text-xs font-semibold rounded-md transition-colors cursor-pointer text-center truncate ${
+            className={`px-3 sm:px-4 py-2 text-[11px] sm:text-xs font-semibold rounded-lg transition-all cursor-pointer text-center truncate ${
               subView === 'TIPOS_ACTIVO'
-                ? 'bg-white text-slate-900 shadow-xs'
+                ? 'bg-white text-slate-900 shadow-sm font-bold'
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
@@ -224,7 +224,7 @@ export const AssetsAndCatalogModule: React.FC<AssetsAndCatalogModuleProps> = ({
 
         <button
           onClick={() => onOpenQrBatchModal(assets)}
-          className="px-3.5 py-2 text-xs font-semibold text-white bg-slate-900 hover:bg-slate-800 rounded-lg flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap shadow-xs"
+          className="px-4 py-2 text-xs font-semibold text-white bg-slate-900 hover:bg-black rounded-xl flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap shadow-xs active:scale-95 transition-all"
         >
           <QrCode className="w-4 h-4" />
           <span>Imprimir QR ({assets.length})</span>
@@ -235,13 +235,13 @@ export const AssetsAndCatalogModule: React.FC<AssetsAndCatalogModuleProps> = ({
       {subView === 'INVENTARIO' && (
         <div className="space-y-4">
           {/* Mobile Switcher between Lista and Ficha */}
-          <div className="lg:hidden flex items-center bg-slate-100 p-1 rounded-lg text-xs font-semibold">
+          <div className="lg:hidden flex items-center bg-slate-100 p-1 rounded-xl text-xs font-semibold">
             <button
               type="button"
               onClick={() => setMobileAssetTab('lista')}
-              className={`flex-1 py-2 text-center rounded-md transition-all ${
+              className={`flex-1 py-2 text-center rounded-lg transition-all ${
                 mobileAssetTab === 'lista'
-                  ? 'bg-white text-slate-900 shadow-xs font-bold'
+                  ? 'bg-white text-slate-900 shadow-sm font-bold'
                   : 'text-slate-600'
               }`}
             >
@@ -250,9 +250,9 @@ export const AssetsAndCatalogModule: React.FC<AssetsAndCatalogModuleProps> = ({
             <button
               type="button"
               onClick={() => setMobileAssetTab('detalle')}
-              className={`flex-1 py-2 text-center rounded-md transition-all ${
+              className={`flex-1 py-2 text-center rounded-lg transition-all ${
                 mobileAssetTab === 'detalle'
-                  ? 'bg-white text-slate-900 shadow-xs font-bold'
+                  ? 'bg-white text-slate-900 shadow-sm font-bold'
                   : 'text-slate-600'
               }`}
             >

@@ -117,24 +117,24 @@ export const InventoryAndIncidentsModule: React.FC<InventoryAndIncidentsModulePr
 
   return (
     <div className="space-y-5">
-      {/* Sub-navigation Hallmark */}
-      <div className="bg-white border border-slate-200 rounded-xl p-3 sm:p-4 shadow-xs">
-        <div className="grid grid-cols-3 sm:flex items-center gap-1 p-1 bg-slate-100 rounded-lg">
+      {/* Sub-navigation Apple Segmented Control */}
+      <div className="apple-card rounded-2xl border border-slate-200/80 p-3 sm:p-4 shadow-xs">
+        <div className="grid grid-cols-3 sm:flex items-center gap-1 p-1 bg-slate-100 rounded-xl">
           <button
             onClick={() => setSubTab('inventario')}
-            className={`px-2 sm:px-3.5 py-1.5 text-[11px] sm:text-xs font-semibold rounded-md transition-colors cursor-pointer text-center truncate flex items-center justify-center gap-1.5 ${subTab === 'inventario'
-                ? 'bg-white text-slate-900 shadow-xs'
+            className={`px-3 sm:px-4 py-2 text-[11px] sm:text-xs font-semibold rounded-lg transition-all cursor-pointer text-center truncate flex items-center justify-center gap-1.5 ${subTab === 'inventario'
+                ? 'bg-white text-slate-900 shadow-sm font-bold'
                 : 'text-slate-600 hover:text-slate-900'
               }`}
           >
-            <ClipboardCheck className="w-3.5 h-3.5 shrink-0" />
+            <ClipboardCheck className="w-3.5 h-3.5 shrink-0 text-[#007AFF]" />
             <span className="sm:hidden">Inventario</span>
             <span className="hidden sm:inline">Auditoría Inventario ({inventories.length})</span>
           </button>
           <button
             onClick={() => setSubTab('incidentes')}
-            className={`px-2 sm:px-3.5 py-1.5 text-[11px] sm:text-xs font-semibold rounded-md transition-colors cursor-pointer text-center truncate flex items-center justify-center gap-1.5 ${subTab === 'incidentes'
-                ? 'bg-white text-slate-900 shadow-xs'
+            className={`px-3 sm:px-4 py-2 text-[11px] sm:text-xs font-semibold rounded-lg transition-all cursor-pointer text-center truncate flex items-center justify-center gap-1.5 ${subTab === 'incidentes'
+                ? 'bg-white text-slate-900 shadow-sm font-bold'
                 : 'text-slate-600 hover:text-slate-900'
               }`}
           >
@@ -146,16 +146,14 @@ export const InventoryAndIncidentsModule: React.FC<InventoryAndIncidentsModulePr
           </button>
           <button
             onClick={() => setSubTab('territorio')}
-            className={`px-2 sm:px-3.5 py-1.5 text-[11px] sm:text-xs font-semibold rounded-md transition-colors cursor-pointer text-center truncate flex items-center justify-center gap-1.5 ${subTab === 'territorio'
-                ? 'bg-white text-slate-900 shadow-xs'
+            className={`px-3 sm:px-4 py-2 text-[11px] sm:text-xs font-semibold rounded-lg transition-all cursor-pointer text-center truncate flex items-center justify-center gap-1.5 ${subTab === 'territorio'
+                ? 'bg-white text-slate-900 shadow-sm font-bold'
                 : 'text-slate-600 hover:text-slate-900'
               }`}
           >
-            <MapPin className="w-3.5 h-3.5 shrink-0 text-blue-600" />
+            <MapPin className="w-3.5 h-3.5 shrink-0 text-emerald-600" />
             <span className="sm:hidden">Comunas</span>
-            <span className="hidden sm:inline">
-              Catálogo Comunas ({CHILE_COMUNAS_CATALOG.length})
-            </span>
+            <span className="hidden sm:inline">Catálogo Territorial</span>
           </button>
         </div>
       </div>

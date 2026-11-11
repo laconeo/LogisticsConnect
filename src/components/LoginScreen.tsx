@@ -146,11 +146,11 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ users, onLogin }) => {
 
       {/* Contenedor central */}
       <main className="max-w-md w-full mx-auto my-auto py-8">
-        <div className="bg-white/95 backdrop-blur-md border border-slate-200/80 rounded-2xl shadow-2xl p-6 sm:p-8 space-y-6">
+        <div className="bg-white/95 backdrop-blur-xl border border-white/40 rounded-3xl shadow-2xl p-6 sm:p-8 space-y-6">
           {/* Encabezado del login */}
           <div className="space-y-1.5 text-center">
-            <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-blue-50 text-blue-600 mb-2 border border-blue-100 shadow-xs">
-              <ShieldCheck className="w-6 h-6" />
+            <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-[#007AFF]/10 text-[#007AFF] mb-2 border border-[#007AFF]/20 shadow-xs">
+              <ShieldCheck className="w-7 h-7" />
             </div>
             <h1 className="text-xl font-bold tracking-tight text-slate-900">
               Iniciar Sesión en el Sistema
@@ -160,17 +160,17 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ users, onLogin }) => {
             </p>
           </div>
 
-          {/* Selector de pestañas: Formulario vs Cuentas Demo */}
-          <div className="grid grid-cols-2 p-1 bg-slate-100 rounded-lg text-xs font-semibold">
+          {/* Selector de pestañas: Segmented Control estilo Apple */}
+          <div className="grid grid-cols-2 p-1 bg-slate-100 rounded-xl text-xs font-semibold">
             <button
               type="button"
               onClick={() => {
                 setTab('form');
                 setError(null);
               }}
-              className={`py-2 rounded-md transition-all cursor-pointer ${
+              className={`py-2 rounded-lg transition-all cursor-pointer ${
                 tab === 'form'
-                  ? 'bg-white text-slate-900 shadow-xs'
+                  ? 'bg-white text-slate-900 shadow-sm font-bold'
                   : 'text-slate-600 hover:text-slate-900'
               }`}
             >
@@ -182,13 +182,13 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ users, onLogin }) => {
                 setTab('demo');
                 setError(null);
               }}
-              className={`py-2 rounded-md transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
+              className={`py-2 rounded-lg transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
                 tab === 'demo'
-                  ? 'bg-white text-slate-900 shadow-xs'
+                  ? 'bg-white text-slate-900 shadow-sm font-bold'
                   : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              <Sparkles className="w-3.5 h-3.5 text-blue-600" />
+              <Sparkles className="w-3.5 h-3.5 text-[#007AFF]" />
               Perfiles de Prueba
             </button>
           </div>
@@ -197,7 +197,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ users, onLogin }) => {
           {tab === 'form' && (
             <form onSubmit={handleSubmit} className="space-y-4">
               {error && (
-                <div className="p-3 bg-rose-50 border border-rose-200 text-rose-800 text-xs rounded-lg flex items-start gap-2.5">
+                <div className="p-3 bg-rose-50 border border-rose-200 text-rose-800 text-xs rounded-xl flex items-start gap-2.5">
                   <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
                   <p>{error}</p>
                 </div>
@@ -216,7 +216,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ users, onLogin }) => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="ej: usuario@familysearch.org"
-                    className="w-full pl-9 pr-3 py-2.5 text-xs bg-slate-50 border border-slate-300 rounded-lg focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all font-medium text-slate-900 placeholder:text-slate-400"
+                    className="w-full pl-9 pr-3 py-2.5 text-xs bg-slate-50 border border-slate-300/80 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#007AFF]/20 focus:border-[#007AFF] transition-all font-medium text-slate-900 placeholder:text-slate-400"
                   />
                 </div>
               </div>
@@ -239,12 +239,12 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ users, onLogin }) => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••••"
-                    className="w-full pl-9 pr-10 py-2.5 text-xs bg-slate-50 border border-slate-300 rounded-lg focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all font-mono text-slate-900"
+                    className="w-full pl-9 pr-10 py-2.5 text-xs bg-slate-50 border border-slate-300/80 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#007AFF]/20 focus:border-[#007AFF] transition-all font-mono text-slate-900"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-2.5 text-slate-400 hover:text-slate-700 p-0.5 rounded cursor-pointer"
+                    className="absolute right-3 top-2.5 text-slate-400 hover:text-slate-700 p-0.5 rounded-md cursor-pointer transition-colors"
                     title={showPassword ? 'Ocultar contraseña' : 'Ver contraseña'}
                   >
                     {showPassword ? (
@@ -263,7 +263,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ users, onLogin }) => {
                     type="checkbox"
                     checked={rememberMe}
                     onChange={(e) => setRememberMe(e.target.checked)}
-                    className="w-4 h-4 rounded text-blue-600 border-slate-300 focus:ring-blue-500 cursor-pointer"
+                    className="w-4 h-4 rounded text-[#007AFF] border-slate-300 focus:ring-[#007AFF] cursor-pointer"
                   />
                   <span>Recordar sesión en este equipo</span>
                 </label>
@@ -273,7 +273,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ users, onLogin }) => {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white text-xs font-bold rounded-lg shadow-md shadow-blue-500/20 hover:shadow-lg transition-all cursor-pointer flex items-center justify-center gap-2 mt-2"
+                className="w-full py-3 px-4 bg-[#007AFF] hover:bg-[#0066d6] disabled:opacity-50 text-white text-xs font-bold rounded-xl shadow-md shadow-blue-500/20 hover:shadow-lg transition-all cursor-pointer flex items-center justify-center gap-2 mt-2 active:scale-[0.98]"
               >
                 {loading ? (
                   <>
@@ -312,19 +312,19 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ users, onLogin }) => {
                       key={u.id}
                       type="button"
                       onClick={() => handleSelectDemoUser(u)}
-                      className={`w-full text-left p-3 rounded-lg border transition-all cursor-pointer flex items-center justify-between group ${
+                      className={`w-full text-left p-3.5 rounded-2xl border transition-all cursor-pointer flex items-center justify-between group active:scale-[0.98] ${
                         isAdmin
                           ? 'border-rose-200 bg-rose-50/40 hover:bg-rose-50 hover:border-rose-400'
-                          : 'border-slate-200 bg-slate-50 hover:bg-blue-50 hover:border-blue-300'
+                          : 'border-slate-200/80 bg-slate-50 hover:bg-blue-50 hover:border-blue-300'
                       }`}
                     >
                       <div className="min-w-0 pr-2">
                         <div className="flex items-center gap-2">
-                          <span className="text-xs font-bold text-slate-900 group-hover:text-blue-700 truncate">
+                          <span className="text-xs font-bold text-slate-900 group-hover:text-[#007AFF] truncate">
                             {u.nombre}
                           </span>
                           {isAdmin && (
-                            <span className="text-[10px] px-1.5 py-0.2 rounded font-bold bg-rose-600 text-white">
+                            <span className="text-[10px] px-1.5 py-0.5 rounded-md font-bold bg-rose-600 text-white">
                               ADMIN
                             </span>
                           )}
@@ -334,14 +334,14 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ users, onLogin }) => {
                         </div>
                         <div className="flex items-center gap-1.5 mt-1 text-[10px]">
                           <span
-                            className={`px-1.5 py-0.5 rounded border font-semibold ${badge.bg}`}
+                            className={`px-2 py-0.5 rounded-md border font-semibold ${badge.bg}`}
                           >
                             {badge.label}
                           </span>
                           <span className="text-slate-400">· {u.pais}</span>
                         </div>
                       </div>
-                      <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-blue-600 group-hover:translate-x-0.5 transition-all shrink-0" />
+                      <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-[#007AFF] group-hover:translate-x-0.5 transition-all shrink-0" />
                     </button>
                   );
                 })}

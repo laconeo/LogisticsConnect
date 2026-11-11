@@ -431,29 +431,43 @@ export const MobileFieldSimulator: React.FC<FieldOperationsViewProps> = ({
   return (
     <div className="space-y-4">
       {/* Top Operational Bar: QR Scanner / Lookup & Offline Queue Control */}
-      <div className="bg-white border border-slate-200 rounded-xl p-3.5 sm:p-4 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+      <div className="apple-card rounded-2xl border border-slate-200/80 p-3.5 sm:p-4 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 shadow-xs">
         <form
           onSubmit={handleQrSearch}
           className="flex items-center gap-2 flex-1"
         >
           <div className="relative flex-1">
-            <QrCode className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+            <QrCode className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
             <input
               type="text"
               placeholder="Escanear QR, ID activo (CFS-CL-063) o Remito..."
               value={qrLookupQuery}
               onChange={(e) => setQrLookupQuery(e.target.value)}
-              className="w-full pl-9 pr-3 py-2.5 text-xs font-mono border border-slate-300 rounded-lg focus:outline-none focus:border-blue-600"
+              className="w-full pl-10 pr-3 py-2.5 text-xs font-mono bg-slate-100/80 hover:bg-slate-100 focus:bg-white border border-slate-200/80 rounded-xl focus:outline-none focus:border-[#007AFF] focus:ring-2 focus:ring-[#007AFF]/20 transition-all"
             />
           </div>
           <button
             type="submit"
-            className="px-4 py-2.5 text-xs font-semibold text-white bg-slate-900 hover:bg-slate-800 rounded-lg flex items-center gap-1.5 cursor-pointer whitespace-nowrap shrink-0"
+            className="px-4 py-2.5 bg-slate-900 hover:bg-black text-white text-xs font-semibold rounded-xl flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer"
           >
             <Search className="w-3.5 h-3.5" />
             Buscar
           </button>
         </form>
+
+        <div className="flex items-center gap-2 text-xs">
+          {isOffline ? (
+            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full font-semibold bg-amber-50 text-amber-700 border border-amber-200">
+              <WifiOff className="w-3.5 h-3.5 text-amber-600" />
+              Sin Conexión ({offlinePendingCount} pendientes)
+            </span>
+          ) : (
+            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+              <Wifi className="w-3.5 h-3.5 text-emerald-600" />
+              En Línea · Sync Activo
+            </span>
+          )}
+        </div>
 
         <button
           type="button"
@@ -471,7 +485,7 @@ export const MobileFieldSimulator: React.FC<FieldOperationsViewProps> = ({
               setIsOffline(true);
             }
           }}
-          className={`px-3.5 py-2.5 rounded-lg text-xs font-semibold flex items-center justify-center gap-2 cursor-pointer transition-colors shrink-0 ${isOffline
+          className={`px-3.5 py-2.5 rounded-xl text-xs font-semibold flex items-center justify-center gap-2 cursor-pointer transition-all shrink-0 active:scale-95 ${isOffline
               ? 'bg-amber-100 text-amber-950 border border-amber-300'
               : 'bg-emerald-50 text-emerald-900 border border-emerald-200'
             }`}
@@ -613,10 +627,10 @@ export const MobileFieldSimulator: React.FC<FieldOperationsViewProps> = ({
         </div>
 
         {/* Right: Active Operational Form */}
-        <div className="lg:col-span-8 bg-white border border-slate-200 rounded-xl overflow-hidden">
-          {/* Visual 4-Step Operational Progress Bar */}
-          <div className="bg-slate-900 text-white px-3 sm:px-4 py-2.5 sm:py-3 border-b border-slate-800">
-            <div className="grid grid-cols-4 gap-1 sm:gap-1.5 text-[10px] sm:text-xs font-semibold">
+        <div className="lg:col-span-8 apple-card rounded-2xl border border-slate-200/80 overflow-hidden shadow-xs">
+          {/* Visual 4-Step Operational Progress Bar — Apple Segmented Stepper */}
+          <div className="apple-glass-dark text-white px-3 sm:px-4 py-3 border-b border-white/10">
+            <div className="grid grid-cols-4 gap-1.5 sm:gap-2 text-[10px] sm:text-xs font-semibold">
               {[
                 { step: 1, short: '1. Bodega', full: '1. Armado Bodega' },
                 { step: 2, short: '2. Ruta', full: '2. Inicio Ruta' },
@@ -628,11 +642,11 @@ export const MobileFieldSimulator: React.FC<FieldOperationsViewProps> = ({
                 return (
                   <div
                     key={s.step}
-                    className={`py-1.5 px-1 sm:px-2 rounded-lg text-center truncate transition-colors ${isDone
-                        ? 'bg-emerald-600/30 text-emerald-300 border border-emerald-500/40'
+                    className={`py-2 px-1 sm:px-2 rounded-xl text-center truncate transition-all ${isDone
+                        ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
                         : isCurrent
-                          ? 'bg-blue-600 text-white font-bold shadow-xs'
-                          : 'bg-slate-800 text-slate-400'
+                          ? 'bg-[#007AFF] text-white font-bold shadow-sm ring-1 ring-white/20'
+                          : 'bg-white/5 text-slate-400'
                       }`}
                   >
                     <span className="sm:hidden">{isDone ? `✓ ${s.short}` : s.short}</span>
@@ -795,7 +809,7 @@ export const MobileFieldSimulator: React.FC<FieldOperationsViewProps> = ({
                   onClick={() =>
                     onPackContainer(activeShipment.id, sealInput.trim())
                   }
-                  className="w-full sm:w-auto min-h-[48px] px-6 py-3 text-xs font-semibold text-white bg-blue-700 hover:bg-blue-800 disabled:bg-slate-300 rounded-xl transition-colors cursor-pointer"
+                  className="w-full sm:w-auto min-h-[50px] px-6 py-3.5 text-xs sm:text-sm font-semibold text-white bg-[#007AFF] hover:bg-[#0066d6] disabled:opacity-40 rounded-xl transition-all cursor-pointer shadow-sm active:scale-[0.98]"
                 >
                   Confirmar Armado y Marcar "Listo para despacho"
                 </button>
@@ -805,9 +819,9 @@ export const MobileFieldSimulator: React.FC<FieldOperationsViewProps> = ({
             {/* STAGE 2: RETIRO Y GENERACIÓN DE REMITO */}
             {activeShipment.estado === 'Listo para despacho' && (
               <div className="space-y-5">
-                <div className="p-4 bg-blue-50/70 border border-blue-200 rounded-xl space-y-1">
+                <div className="p-4 bg-blue-50/70 border border-blue-200/80 rounded-2xl space-y-1">
                   <div className="text-sm font-bold text-slate-900 flex items-center gap-2">
-                    <FileText className="w-4 h-4 text-blue-700" />
+                    <FileText className="w-4 h-4 text-[#007AFF]" />
                     Paso 2: Retiro en Bodega e Inicio de Ruta
                   </div>
                   <p className="text-xs text-slate-600">
@@ -824,7 +838,7 @@ export const MobileFieldSimulator: React.FC<FieldOperationsViewProps> = ({
                     onStartDeliveryAndRemito(activeShipment.id);
                     onOpenRemitoModal(activeShipment);
                   }}
-                  className="w-full sm:w-auto min-h-[50px] px-6 py-3.5 text-sm font-semibold text-white bg-blue-700 hover:bg-blue-800 rounded-xl flex items-center justify-center gap-2 transition-colors cursor-pointer"
+                  className="w-full sm:w-auto min-h-[50px] px-6 py-3.5 text-xs sm:text-sm font-semibold text-white bg-[#007AFF] hover:bg-[#0066d6] rounded-xl flex items-center justify-center gap-2 transition-all cursor-pointer shadow-sm active:scale-[0.98]"
                 >
                   <FileText className="w-4 h-4" />
                   Comenzar Entrega y Generar Remito (2 Ejemplares)
@@ -835,7 +849,7 @@ export const MobileFieldSimulator: React.FC<FieldOperationsViewProps> = ({
             {/* STAGE 3: EN TRÁNSITO -> BOTÓN "LLEGUÉ" CON GEOLOCALIZACIÓN REAL */}
             {activeShipment.estado === 'En curso' && (
               <div className="space-y-5">
-                <div className="p-4 bg-amber-50 border border-amber-200 rounded-xl space-y-1">
+                <div className="p-4 bg-amber-50/80 border border-amber-200/80 rounded-2xl space-y-1">
                   <div className="text-sm font-bold text-amber-950">
                     Paso 3: Envío en Tránsito hacia Unidad Destinataria
                   </div>
@@ -852,7 +866,7 @@ export const MobileFieldSimulator: React.FC<FieldOperationsViewProps> = ({
                   <button
                     disabled={locatingGps}
                     onClick={handleRealGeolocationArrival}
-                    className="min-h-[52px] px-6 py-3.5 text-sm font-bold text-white bg-blue-700 hover:bg-blue-800 disabled:bg-blue-400 rounded-xl flex items-center justify-center gap-2 shadow-xs transition-colors cursor-pointer"
+                    className="min-h-[52px] px-6 py-3.5 text-sm font-bold text-white bg-[#007AFF] hover:bg-[#0066d6] disabled:opacity-50 rounded-xl flex items-center justify-center gap-2 shadow-md shadow-blue-500/20 transition-all cursor-pointer active:scale-[0.98]"
                   >
                     <MapPin className="w-5 h-5" />
                     {locatingGps
@@ -862,9 +876,9 @@ export const MobileFieldSimulator: React.FC<FieldOperationsViewProps> = ({
 
                   <button
                     onClick={() => onOpenRemitoModal(activeShipment)}
-                    className="min-h-[50px] px-5 py-3 text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl flex items-center justify-center gap-2 cursor-pointer"
+                    className="min-h-[50px] px-5 py-3 text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-95"
                   >
-                    <FileText className="w-4 h-4" />
+                    <FileText className="w-4 h-4 text-[#007AFF]" />
                     Descargar Remito PDF
                   </button>
                 </div>
@@ -1180,9 +1194,9 @@ export const MobileFieldSimulator: React.FC<FieldOperationsViewProps> = ({
                   <button
                     disabled={!canConfirmDelivery}
                     onClick={handleCompleteDeliveryClick}
-                    className={`min-h-[52px] flex-1 py-3.5 px-6 rounded-xl text-sm font-bold flex items-center justify-center gap-2 transition-colors ${canConfirmDelivery
-                        ? 'bg-emerald-700 hover:bg-emerald-800 text-white cursor-pointer shadow-xs'
-                        : 'bg-slate-200 text-slate-500 cursor-not-allowed'
+                    className={`min-h-[52px] flex-1 py-3.5 px-6 rounded-xl text-sm font-bold flex items-center justify-center gap-2 transition-all active:scale-[0.98] ${canConfirmDelivery
+                        ? 'bg-[#34C759] hover:bg-[#2db84f] text-white cursor-pointer shadow-md shadow-emerald-500/20'
+                        : 'bg-slate-200 text-slate-400 cursor-not-allowed'
                       }`}
                   >
                     <CheckCircle2 className="w-5 h-5" />
@@ -1192,7 +1206,7 @@ export const MobileFieldSimulator: React.FC<FieldOperationsViewProps> = ({
                   <button
                     type="button"
                     onClick={() => setShowIncidentForm(!showIncidentForm)}
-                    className="min-h-[48px] px-4 py-3 text-xs font-semibold text-red-700 bg-red-50 hover:bg-red-100 rounded-xl flex items-center justify-center gap-1.5 cursor-pointer"
+                    className="min-h-[48px] px-4 py-3 text-xs font-semibold text-rose-700 bg-rose-50 hover:bg-rose-100 border border-rose-200 rounded-xl flex items-center justify-center gap-1.5 cursor-pointer transition-all active:scale-95"
                   >
                     <AlertTriangle className="w-4 h-4" />
                     Reportar Incidencia

@@ -1300,43 +1300,43 @@ export default function App() {
     switch (state) {
       case 'Entregado':
         return (
-          <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-700">
-            <span className="w-2 h-2 rounded-full bg-emerald-600" />
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200/80 shadow-2xs">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.5)]" />
             Entregado
           </span>
         );
       case 'Llegué':
         return (
-          <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-teal-700">
-            <span className="w-2 h-2 rounded-full bg-teal-600" />
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-teal-50 text-teal-700 border border-teal-200/80 shadow-2xs">
+            <span className="w-1.5 h-1.5 rounded-full bg-teal-500 shadow-[0_0_6px_rgba(20,184,166,0.5)]" />
             En Destino (Llegué)
           </span>
         );
       case 'En curso':
         return (
-          <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-700">
-            <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse" />
-            En Curso (En Tránsito)
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-blue-50 text-blue-700 border border-blue-200/80 shadow-2xs">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#007AFF] animate-pulse" />
+            En Tránsito
           </span>
         );
       case 'Listo para despacho':
         return (
-          <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-amber-700">
-            <span className="w-2 h-2 rounded-full bg-amber-500" />
-            Listo para Despacho
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-amber-50 text-amber-700 border border-amber-200/80 shadow-2xs">
+            <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+            Listo Despacho
           </span>
         );
       case 'Pendiente':
         return (
-          <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600">
-            <span className="w-2 h-2 rounded-full bg-slate-400" />
-            Pendiente en Bodega
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-slate-100 text-slate-600 border border-slate-200/80 shadow-2xs">
+            <span className="w-1.5 h-1.5 rounded-full bg-slate-400" />
+            En Bodega
           </span>
         );
       case 'Incidencia':
         return (
-          <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-rose-700">
-            <span className="w-2 h-2 rounded-full bg-rose-600" />
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-rose-50 text-rose-700 border border-rose-200/80 shadow-2xs">
+            <span className="w-1.5 h-1.5 rounded-full bg-rose-500" />
             Incidencia
           </span>
         );
@@ -1348,11 +1348,11 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] text-[#0F172A] flex flex-col font-sans antialiased pb-24 md:pb-8">
+    <div className="min-h-screen bg-[#F8FAFC] text-[#0F172A] flex flex-col font-sans antialiased pb-24 md:pb-8 selection:bg-[#007AFF] selection:text-white">
       {/* =====================================================================
-          HEADER DE NAVEGACIÓN HALLMARK CON FILTRADO ESTRICTO POR ROL (RBAC)
+          HEADER DE NAVEGACIÓN APPLE LIQUID GLASS (HIG)
       ===================================================================== */}
-      <header className="sticky top-0 z-30 bg-slate-900 text-white border-b border-slate-800 shadow-sm">
+      <header className="apple-glass-dark sticky top-0 z-30 text-white border-b border-white/10 shadow-sm transition-all">
         {/* Nivel 1: Barra Principal */}
         <div className="max-w-[1440px] mx-auto px-3.5 sm:px-6 h-14 flex items-center justify-between gap-2">
           {/* Izquierda: Menú Móvil + Identidad + Selector País (Desktop) */}
@@ -1360,30 +1360,30 @@ export default function App() {
             <button
               type="button"
               onClick={() => setMobileMenuOpen(true)}
-              className="md:hidden p-2 -ml-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white flex items-center justify-center shrink-0 cursor-pointer"
+              className="md:hidden p-2 -ml-1.5 rounded-xl bg-white/5 hover:bg-white/10 active:scale-95 text-slate-200 hover:text-white flex items-center justify-center shrink-0 transition-transform cursor-pointer"
               aria-label="Abrir menú de navegación"
             >
               <Menu className="w-5 h-5" />
             </button>
 
-            <div className="flex items-center gap-2 shrink-0">
-              <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center font-bold text-white shadow-xs">
+            <div className="flex items-center gap-2.5 shrink-0">
+              <div className="w-8 h-8 rounded-xl bg-[#007AFF] flex items-center justify-center font-bold text-white shadow-xs">
                 <Truck className="w-4 h-4" />
               </div>
               <div className="leading-tight">
                 <span className="font-bold text-xs sm:text-sm tracking-tight text-white block">
                   LOGISTICS CONNECT
                 </span>
-                <span className="text-[10px] text-slate-400 hidden sm:block">
+                <span className="text-[10px] text-slate-400 font-medium hidden sm:block">
                   {currentUser.rol_etiqueta} · {currentUser.pais}
                 </span>
               </div>
             </div>
 
-            <div className="h-4 w-px bg-slate-800 hidden lg:block" />
+            <div className="h-4 w-px bg-white/10 hidden lg:block ml-2" />
 
-            {/* Selector de País Desktop */}
-            <div className="hidden md:flex items-center gap-1 bg-slate-800/90 p-0.5 rounded-lg border border-slate-700/80">
+            {/* Selector de País Desktop (Segmented Control HIG) */}
+            <div className="hidden md:flex items-center gap-1 bg-white/5 p-1 rounded-xl border border-white/10 ml-2">
               {COUNTRY_SUMMARIES.map((c) => {
                 const isAllowedCountry =
                   activeRolePerms.canSwitchCountries ||
@@ -1393,11 +1393,11 @@ export default function App() {
                     key={c.codigo}
                     disabled={!isAllowedCountry}
                     onClick={() => isAllowedCountry && setSelectedCountry(c.codigo)}
-                    className={`px-2 py-1 rounded text-[11px] font-semibold transition-colors whitespace-nowrap shrink-0 flex items-center gap-1 ${selectedCountry === c.codigo
-                        ? 'bg-blue-600 text-white cursor-pointer shadow-xs'
+                    className={`px-2.5 py-1 rounded-lg text-[11px] font-semibold transition-all whitespace-nowrap shrink-0 flex items-center gap-1 ${selectedCountry === c.codigo
+                        ? 'bg-[#007AFF] text-white cursor-pointer shadow-xs'
                         : isAllowedCountry
-                          ? 'text-slate-400 hover:text-white cursor-pointer'
-                          : 'text-slate-600 cursor-not-allowed opacity-40'
+                          ? 'text-slate-300 hover:text-white hover:bg-white/10 cursor-pointer'
+                          : 'text-slate-500 cursor-not-allowed opacity-35'
                       }`}
                     title={
                       isAllowedCountry
@@ -1420,15 +1420,15 @@ export default function App() {
             <button
               type="button"
               onClick={() => setMobileMenuOpen(true)}
-              className="md:hidden flex items-center gap-1 bg-slate-800 hover:bg-slate-700 px-2 py-1 rounded-md text-[11px] font-bold text-blue-300 border border-slate-700 cursor-pointer"
+              className="md:hidden flex items-center gap-1 bg-white/10 hover:bg-white/15 px-2.5 py-1 rounded-lg text-[11px] font-bold text-blue-300 border border-white/10 active:scale-95 transition-all cursor-pointer"
               title="Cambiar país o rol"
             >
-              <MapPin className="w-3 h-3 text-blue-400" />
+              <MapPin className="w-3 h-3 text-[#007AFF]" />
               <span>{selectedCountry}</span>
             </button>
 
             {/* Desktop User Switcher */}
-            <div className="hidden md:flex items-center gap-1.5 bg-slate-800 border border-blue-500/60 rounded-md px-2.5 py-1">
+            <div className="hidden md:flex items-center gap-1.5 bg-white/5 border border-white/10 hover:border-white/20 rounded-xl px-2.5 py-1 transition-colors">
               <UserCheck className="w-3.5 h-3.5 text-blue-400 shrink-0" />
               <select
                 value={currentUserId}
@@ -1451,7 +1451,7 @@ export default function App() {
             {currentUser.rol === 'ADMIN_REGIONAL' && (
               <button
                 onClick={() => setShowUserModal(true)}
-                className="hidden md:flex px-2.5 py-1.5 rounded-md border border-rose-500/60 bg-rose-950/70 hover:bg-rose-900 text-xs font-semibold text-rose-200 items-center gap-1.5 whitespace-nowrap shrink-0 cursor-pointer shadow-xs"
+                className="hidden md:flex px-3 py-1.5 rounded-xl border border-rose-500/30 bg-rose-500/15 hover:bg-rose-500/25 active:scale-95 text-xs font-semibold text-rose-200 items-center gap-1.5 whitespace-nowrap shrink-0 cursor-pointer shadow-xs transition-all"
                 title="Gestión y Alta de Usuarios (Módulo exclusivo Administrador Regional)"
               >
                 <UserPlus className="w-3.5 h-3.5 text-rose-400" />
@@ -1462,7 +1462,7 @@ export default function App() {
             {activeRolePerms.canManageDb && (
               <button
                 onClick={() => setShowDbModal(true)}
-                className="hidden md:flex px-2.5 py-1.5 rounded-md border border-slate-700 bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-200 items-center gap-1.5 whitespace-nowrap shrink-0 cursor-pointer"
+                className="hidden md:flex px-3 py-1.5 rounded-xl border border-emerald-500/30 bg-emerald-500/15 hover:bg-emerald-500/25 active:scale-95 text-xs font-semibold text-emerald-200 items-center gap-1.5 whitespace-nowrap shrink-0 cursor-pointer shadow-xs transition-all"
                 title="Administración de Datos y Exportación CSV/SQL"
               >
                 <Database className="w-3.5 h-3.5 text-emerald-400" />
@@ -1474,10 +1474,10 @@ export default function App() {
             <button
               type="button"
               onClick={() => setMobileMenuOpen(true)}
-              className="md:hidden flex items-center gap-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 px-2 py-1 rounded-md text-[11px] font-semibold text-slate-200 cursor-pointer"
+              className="md:hidden flex items-center gap-1.5 bg-white/10 hover:bg-white/15 border border-white/10 px-2 py-1 rounded-lg text-[11px] font-semibold text-slate-200 active:scale-95 transition-all cursor-pointer"
               title="Abrir perfil y opciones"
             >
-              <span className="w-5 h-5 rounded-full bg-blue-600 text-white text-[10px] font-bold flex items-center justify-center">
+              <span className="w-5 h-5 rounded-full bg-[#007AFF] text-white text-[10px] font-bold flex items-center justify-center">
                 {currentUser.nombre.charAt(0)}
               </span>
               <span className="max-w-[70px] truncate text-[11px]">
@@ -1488,7 +1488,7 @@ export default function App() {
             {/* Logout Button */}
             <button
               onClick={handleLogout}
-              className="p-1.5 rounded-md border border-slate-700 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white cursor-pointer"
+              className="p-1.5 rounded-xl border border-white/10 bg-white/5 hover:bg-rose-500/20 hover:border-rose-500/30 text-slate-300 hover:text-rose-200 cursor-pointer transition-all active:scale-95"
               title="Cerrar sesión"
             >
               <LogOut className="w-3.5 h-3.5" />
@@ -1496,9 +1496,9 @@ export default function App() {
           </div>
         </div>
 
-        {/* Nivel 2: MENÚ DE INSTANCIAS AUTORIZADAS (Solo Desktop - en móvil se usa la barra inferior fija) */}
-        <div className="hidden md:block bg-slate-950/90 border-t border-slate-800/90">
-          <div className="max-w-[1440px] mx-auto px-3 sm:px-6 py-2">
+        {/* Nivel 2: MENÚ DE INSTANCIAS AUTORIZADAS (macOS Segmented Toolbar) */}
+        <div className="hidden md:block apple-glass-dark border-t border-white/10">
+          <div className="max-w-[1440px] mx-auto px-3 sm:px-6 py-2.5">
             <div
               className={`grid gap-2 ${allowedLogisticsStages.length === 2
                   ? 'grid-cols-2 max-w-2xl'
@@ -1520,29 +1520,29 @@ export default function App() {
                       setActiveModule(stage.id);
                       setMobileMenuOpen(false);
                     }}
-                    className={`group text-left px-3 py-2 rounded-lg border transition-all cursor-pointer flex flex-col justify-between ${isActive
-                        ? 'bg-blue-600 text-white border-blue-500 shadow-xs'
-                        : 'bg-slate-900/90 text-slate-300 border-slate-800 hover:bg-slate-800 hover:text-white'
+                    className={`group text-left p-2.5 rounded-xl border transition-all cursor-pointer flex flex-col justify-between ${isActive
+                        ? 'bg-[#007AFF] text-white border-blue-400/50 shadow-md ring-1 ring-white/20'
+                        : 'bg-white/[0.04] text-slate-300 border-white/10 hover:bg-white/[0.08] hover:text-white hover:border-white/20'
                       }`}
                   >
                     <div className="flex items-center justify-between gap-1.5 w-full">
                       <span
-                        className={`text-[10px] font-mono uppercase tracking-wider font-semibold ${isActive ? 'text-blue-100' : 'text-blue-400'
+                        className={`text-[10px] font-mono uppercase tracking-wider font-bold ${isActive ? 'text-blue-100' : 'text-blue-400'
                           }`}
                       >
                         {stage.step}
                       </span>
                       <span
-                        className={`text-[10px] font-mono font-bold px-1.5 py-0.5 rounded ${isActive
-                            ? 'bg-blue-700 text-white'
-                            : 'bg-slate-800 text-slate-300'
+                        className={`text-[10px] font-mono font-bold px-1.5 py-0.5 rounded-md ${isActive
+                            ? 'bg-black/25 text-white'
+                            : 'bg-white/10 text-slate-300'
                           }`}
                       >
                         {stage.badge}
                       </span>
                     </div>
 
-                    <div className="flex items-center gap-1.5 mt-1">
+                    <div className="flex items-center gap-1.5 mt-1.5">
                       <Icon
                         className={`w-3.5 h-3.5 shrink-0 ${isActive
                             ? 'text-white'
@@ -1567,21 +1567,24 @@ export default function App() {
           </div>
         </div>
 
-        {/* Modal Drawer Desplegable Móvil (Slide-over limpio Hallmark) */}
+        {/* Modal Drawer Desplegable Móvil (iOS Modal Sheet) */}
         {mobileMenuOpen && (
-          <div className="md:hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-xs flex flex-col justify-end sm:justify-start">
-            <div className="bg-slate-900 border-t sm:border-b sm:border-t-0 border-slate-800 p-5 space-y-4 max-h-[85vh] overflow-y-auto rounded-t-2xl sm:rounded-none shadow-2xl">
+          <div className="md:hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-md flex flex-col justify-end animate-in fade-in duration-200">
+            <div className="apple-glass-dark border-t border-white/15 p-5 space-y-4 max-h-[88vh] overflow-y-auto rounded-t-[28px] shadow-2xl safe-bottom">
+              {/* iOS Sheet Drag Handle */}
+              <div className="w-10 h-1 bg-white/20 rounded-full mx-auto -mt-1 mb-2" />
+
               {/* Header Drawer con Botón Cerrar */}
-              <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center font-bold text-white text-xs">
+              <div className="flex items-center justify-between border-b border-white/10 pb-3">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-full bg-[#007AFF] text-white flex items-center justify-center font-bold text-xs shadow-sm ring-1 ring-white/20">
                     {currentUser.nombre.charAt(0)}
                   </div>
                   <div>
                     <div className="text-sm font-bold text-white truncate max-w-[200px]">
                       {currentUser.nombre}
                     </div>
-                    <div className="text-[11px] text-blue-400 font-semibold">
+                    <div className="text-[11px] text-blue-400 font-medium">
                       {currentUser.rol_etiqueta} · {currentUser.organizacion}
                     </div>
                   </div>
@@ -1589,27 +1592,27 @@ export default function App() {
                 <button
                   type="button"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white cursor-pointer"
+                  className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white flex items-center justify-center cursor-pointer transition-colors"
                   aria-label="Cerrar menú"
                 >
-                  <X className="w-5 h-5" />
+                  <X className="w-4 h-4" />
                 </button>
               </div>
 
-              {/* Selector de Rol / Cuentas en Móvil */}
+              {/* Selector de Rol / Cuentas en Móvil (iOS Grouped Style) */}
               <div className="space-y-1.5">
-                <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
+                <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block px-1">
                   Cambiar Rol Operativo / Cuenta Demo
                 </label>
                 <div className="relative">
-                  <UserCheck className="w-4 h-4 text-blue-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                  <UserCheck className="w-4 h-4 text-[#007AFF] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                   <select
                     value={currentUserId}
                     onChange={(e) => handleSelectUserAccount(e.target.value)}
-                    className="w-full pl-9 pr-3 py-2.5 bg-slate-800 border border-slate-700 rounded-lg text-xs font-semibold text-white focus:outline-none focus:border-blue-500"
+                    className="w-full pl-10 pr-3 py-2.5 bg-white/5 border border-white/10 rounded-xl text-xs font-semibold text-white focus:outline-none focus:border-[#007AFF] focus:ring-1 focus:ring-[#007AFF]"
                   >
                     {users.map((u) => (
-                      <option key={u.id} value={u.id}>
+                      <option key={u.id} value={u.id} className="bg-slate-900 text-white">
                         {u.nombre} — {u.rol_etiqueta}
                       </option>
                     ))}
@@ -1617,9 +1620,9 @@ export default function App() {
                 </div>
               </div>
 
-              {/* Selector de País en Móvil */}
+              {/* Selector de País en Móvil (iOS Segmented Grid) */}
               <div className="space-y-1.5">
-                <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-slate-400 px-1">
                   <span>País Operativo</span>
                   {!activeRolePerms.canSwitchCountries && (
                     <span className="text-amber-400 lowercase text-[10px] font-normal">
@@ -1627,7 +1630,7 @@ export default function App() {
                     </span>
                   )}
                 </div>
-                <div className="grid grid-cols-4 gap-1.5">
+                <div className="grid grid-cols-4 gap-1.5 p-1 bg-white/5 rounded-xl border border-white/10">
                   {COUNTRY_SUMMARIES.map((c) => {
                     const isAllowedCountry =
                       activeRolePerms.canSwitchCountries ||
@@ -1642,15 +1645,15 @@ export default function App() {
                             setMobileMenuOpen(false);
                           }
                         }}
-                        className={`py-2 px-2 rounded-lg text-xs font-bold transition-all text-center flex flex-col items-center justify-center gap-0.5 ${selectedCountry === c.codigo
-                            ? 'bg-blue-600 text-white shadow-xs'
+                        className={`py-2 px-1.5 rounded-lg text-xs font-bold transition-all text-center flex flex-col items-center justify-center gap-0.5 ${selectedCountry === c.codigo
+                            ? 'bg-[#007AFF] text-white shadow-sm'
                             : isAllowedCountry
-                              ? 'bg-slate-800 text-slate-300 hover:bg-slate-700'
-                              : 'bg-slate-800/40 text-slate-600 opacity-40 cursor-not-allowed'
+                              ? 'text-slate-300 hover:text-white hover:bg-white/10'
+                              : 'text-slate-600 opacity-40 cursor-not-allowed'
                           }`}
                       >
                         <span>{c.codigo}</span>
-                        <span className="text-[9px] font-normal opacity-75 truncate max-w-[60px]">
+                        <span className="text-[9px] font-normal opacity-80 truncate max-w-[60px]">
                           {c.nombre}
                         </span>
                       </button>
@@ -1659,12 +1662,12 @@ export default function App() {
                 </div>
               </div>
 
-              {/* Lista Completa de Pantallas Autorizadas */}
+              {/* Lista Completa de Pantallas Autorizadas (iOS Grouped List) */}
               <div className="space-y-1.5">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block px-1">
                   Instancias Habilitadas ({allowedLogisticsStages.length} de 6)
                 </span>
-                <div className="grid grid-cols-1 gap-1.5">
+                <div className="space-y-1.5">
                   {allowedLogisticsStages.map((stage) => {
                     const Icon = stage.icon;
                     const isActive = activeModule === stage.id;
@@ -1676,13 +1679,15 @@ export default function App() {
                           setActiveModule(stage.id);
                           setMobileMenuOpen(false);
                         }}
-                        className={`w-full p-3 rounded-xl border text-left flex items-center justify-between transition-colors ${isActive
-                            ? 'bg-blue-600 text-white border-blue-500 shadow-xs'
-                            : 'bg-slate-800/80 text-slate-200 border-slate-700 hover:bg-slate-800'
+                        className={`w-full p-3 rounded-2xl border text-left flex items-center justify-between transition-all active:scale-[0.98] ${isActive
+                            ? 'bg-[#007AFF] text-white border-blue-400/50 shadow-md ring-1 ring-white/20'
+                            : 'bg-white/5 text-slate-200 border-white/10 hover:bg-white/10'
                           }`}
                       >
                         <div className="flex items-center gap-3 min-w-0">
-                          <Icon className="w-4 h-4 shrink-0" />
+                          <div className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 ${isActive ? 'bg-white/20 text-white' : 'bg-white/10 text-blue-400'}`}>
+                            <Icon className="w-4 h-4" />
+                          </div>
                           <div className="min-w-0">
                             <div className="text-xs font-bold truncate">
                               {stage.title}
@@ -1695,7 +1700,7 @@ export default function App() {
                             </div>
                           </div>
                         </div>
-                        <span className="text-xs font-mono font-bold shrink-0 ml-2">
+                        <span className={`text-xs font-mono font-bold shrink-0 ml-2 px-2 py-0.5 rounded-lg ${isActive ? 'bg-black/25 text-white' : 'bg-white/10 text-slate-300'}`}>
                           {stage.badge}
                         </span>
                       </button>
@@ -1705,7 +1710,7 @@ export default function App() {
               </div>
 
               {/* Acciones de Administrador & Sistema */}
-              <div className="pt-2 border-t border-slate-800 space-y-2">
+              <div className="pt-2 border-t border-white/10 space-y-2">
                 {currentUser.rol === 'ADMIN_REGIONAL' && (
                   <button
                     type="button"
@@ -1713,10 +1718,12 @@ export default function App() {
                       setShowUserModal(true);
                       setMobileMenuOpen(false);
                     }}
-                    className="w-full p-3 rounded-xl border border-rose-800 bg-rose-950/70 hover:bg-rose-900/80 text-rose-200 text-left flex items-center justify-between"
+                    className="w-full p-3 rounded-2xl border border-rose-500/30 bg-rose-950/40 hover:bg-rose-900/50 text-rose-200 text-left flex items-center justify-between transition-colors active:scale-[0.98]"
                   >
                     <div className="flex items-center gap-3">
-                      <UserPlus className="w-4 h-4 text-rose-400 shrink-0" />
+                      <div className="w-8 h-8 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center shrink-0">
+                        <UserPlus className="w-4 h-4" />
+                      </div>
                       <div>
                         <div className="text-xs font-bold">Gestión y Alta de Usuarios</div>
                         <div className="text-[11px] text-rose-300">
@@ -1734,10 +1741,12 @@ export default function App() {
                       setShowDbModal(true);
                       setMobileMenuOpen(false);
                     }}
-                    className="w-full p-3 rounded-xl border border-slate-700 bg-slate-800 hover:bg-slate-750 text-slate-200 text-left flex items-center justify-between"
+                    className="w-full p-3 rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 text-slate-200 text-left flex items-center justify-between transition-colors active:scale-[0.98]"
                   >
                     <div className="flex items-center gap-3">
-                      <Database className="w-4 h-4 text-emerald-400 shrink-0" />
+                      <div className="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
+                        <Database className="w-4 h-4" />
+                      </div>
                       <div>
                         <div className="text-xs font-bold">Base de Datos y SQL</div>
                         <div className="text-[11px] text-slate-400">
@@ -1763,11 +1772,11 @@ export default function App() {
       </header>
 
       {/* Banner de Permisos y Ámbito del Rol Activo */}
-      <div className="bg-white border-b border-slate-200">
+      <div className="bg-white/80 backdrop-blur-md border-b border-slate-200/80">
         <div className="max-w-[1440px] mx-auto px-3.5 sm:px-6 py-2 flex flex-wrap items-center justify-between gap-1.5 text-xs">
-          <div className="flex items-center gap-1.5 text-slate-700 min-w-0">
-            <span className="font-mono font-bold text-blue-700 uppercase shrink-0 text-[11px] sm:text-xs">
-              [{currentUser.rol_etiqueta}]
+          <div className="flex items-center gap-2 text-slate-700 min-w-0">
+            <span className="font-mono font-bold text-[#007AFF] bg-[#007AFF]/10 border border-[#007AFF]/20 px-2 py-0.5 rounded-full uppercase shrink-0 text-[10px] sm:text-[11px]">
+              {currentUser.rol_etiqueta}
             </span>
             <span className="font-semibold text-slate-900 truncate">
               {currentUser.nombre}
@@ -1795,107 +1804,115 @@ export default function App() {
       <main className="flex-1 max-w-[1440px] w-full mx-auto px-3.5 sm:px-6 py-4 sm:py-6 space-y-5">
         {activeModule === 'torre_control' && (
           <>
-            {/* KPI Metric Strip — 2x2 on mobile, 4 in a row on desktop */}
+            {/* KPI Metric Strip — Apple Fitness / Health Style */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
-              <div className="bg-white border border-slate-200/80 rounded-xl p-3 sm:p-5 shadow-xs">
+              <div className="apple-card rounded-2xl p-4 sm:p-5 border border-slate-200/80 shadow-xs hover:shadow-md transition-shadow">
                 <div className="flex items-center justify-between">
                   <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-500">
                     {currentUser.rol === 'TRANSPORTISTA'
                       ? 'Mis Envíos Asignados'
                       : `Centros (${currentCountrySummary.codigo})`}
                   </span>
-                  <Package className="w-4 h-4 text-blue-600 shrink-0" />
+                  <div className="w-8 h-8 rounded-xl bg-blue-500/10 text-[#007AFF] flex items-center justify-center shrink-0">
+                    <Package className="w-4 h-4" />
+                  </div>
                 </div>
-                <div className="mt-1 flex items-baseline justify-between gap-1">
-                  <span className="text-xl sm:text-2xl font-bold font-mono text-slate-900 tabular-nums">
+                <div className="mt-2 flex items-baseline justify-between gap-1">
+                  <span className="text-2xl sm:text-3xl font-extrabold font-mono text-slate-900 tabular-nums tracking-tight">
                     {currentUser.rol === 'TRANSPORTISTA'
                       ? visibleShipments.length
                       : currentCountrySummary.centros_totales_2026}
                   </span>
-                  <span className="text-[10px] sm:text-[11px] font-semibold text-emerald-700 tabular-nums truncate">
+                  <span className="text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded-md tabular-nums truncate">
                     {currentUser.rol === 'TRANSPORTISTA'
                       ? currentUser.organizacion
                       : `${currentCountrySummary.notebooks_desplegados} eq.`}
                   </span>
                 </div>
-                <p className="text-[11px] text-slate-500 mt-1 hidden sm:block">
+                <p className="text-[11px] text-slate-500 mt-1.5 hidden sm:block">
                   Maletas con 6 notebooks + 6 mouses + 6 cargadores + 1 zapatilla
                 </p>
               </div>
 
-              <div className="bg-white border border-slate-200/80 rounded-xl p-3 sm:p-5 shadow-xs">
+              <div className="apple-card rounded-2xl p-4 sm:p-5 border border-slate-200/80 shadow-xs hover:shadow-md transition-shadow">
                 <div className="flex items-center justify-between">
                   <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-500">
                     Entregas Listas
                   </span>
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                  <div className="w-8 h-8 rounded-xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center shrink-0">
+                    <CheckCircle2 className="w-4 h-4" />
+                  </div>
                 </div>
-                <div className="mt-1 flex items-baseline justify-between gap-1">
-                  <span className="text-xl sm:text-2xl font-bold font-mono text-slate-900 tabular-nums">
+                <div className="mt-2 flex items-baseline justify-between gap-1">
+                  <span className="text-2xl sm:text-3xl font-extrabold font-mono text-slate-900 tabular-nums tracking-tight">
                     {currentUser.rol === 'TRANSPORTISTA'
                       ? visibleShipments.filter((s) => s.estado === 'Entregado')
                         .length
                       : `${currentCountrySummary.centros_entregados}/${currentCountrySummary.centros_totales_2026}`}
                   </span>
-                  <span className="text-[10px] sm:text-[11px] font-semibold text-emerald-700 tabular-nums">
+                  <span className="text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded-md tabular-nums">
                     Con respaldo
                   </span>
                 </div>
-                <p className="text-[11px] text-slate-500 mt-1 hidden sm:block">
+                <p className="text-[11px] text-slate-500 mt-1.5 hidden sm:block">
                   Con Remito firmado, foto de receptor y RUT verificado
                 </p>
               </div>
 
-              <div className="bg-white border border-slate-200/80 rounded-xl p-3 sm:p-5 shadow-xs">
+              <div className="apple-card rounded-2xl p-4 sm:p-5 border border-slate-200/80 shadow-xs hover:shadow-md transition-shadow">
                 <div className="flex items-center justify-between">
                   <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-500">
                     En Ruta / Pendientes
                   </span>
-                  <Truck className="w-4 h-4 text-amber-600 shrink-0" />
+                  <div className="w-8 h-8 rounded-xl bg-amber-500/10 text-amber-600 flex items-center justify-center shrink-0">
+                    <Truck className="w-4 h-4" />
+                  </div>
                 </div>
-                <div className="mt-1 flex items-baseline justify-between gap-1">
-                  <span className="text-xl sm:text-2xl font-bold font-mono text-slate-900 tabular-nums">
+                <div className="mt-2 flex items-baseline justify-between gap-1">
+                  <span className="text-2xl sm:text-3xl font-extrabold font-mono text-slate-900 tabular-nums tracking-tight">
                     {
                       visibleShipments.filter(
                         (s) => s.estado !== 'Entregado'
                       ).length
                     }
                   </span>
-                  <span className="text-[10px] sm:text-[11px] font-mono text-slate-500 truncate">
+                  <span className="text-[11px] font-mono text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded-md truncate">
                     En seguimiento
                   </span>
                 </div>
-                <p className="text-[11px] text-slate-500 mt-1 hidden sm:block">
+                <p className="text-[11px] text-slate-500 mt-1.5 hidden sm:block">
                   Despacho desde Bodega Pedro de Valdivia 1423
                 </p>
               </div>
 
-              <div className="bg-white border border-slate-200/80 rounded-xl p-3 sm:p-5 shadow-xs">
+              <div className="apple-card rounded-2xl p-4 sm:p-5 border border-slate-200/80 shadow-xs hover:shadow-md transition-shadow">
                 <div className="flex items-center justify-between">
                   <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-500">
                     Valor Declarado
                   </span>
-                  <Clock className="w-4 h-4 text-blue-600 shrink-0" />
+                  <div className="w-8 h-8 rounded-xl bg-blue-500/10 text-[#007AFF] flex items-center justify-center shrink-0">
+                    <Clock className="w-4 h-4" />
+                  </div>
                 </div>
-                <div className="mt-1 flex items-baseline justify-between gap-1">
-                  <span className="text-xl sm:text-2xl font-bold font-mono text-slate-900 tabular-nums">
+                <div className="mt-2 flex items-baseline justify-between gap-1">
+                  <span className="text-2xl sm:text-3xl font-extrabold font-mono text-slate-900 tabular-nums tracking-tight">
                     $3.0M
                   </span>
-                  <span className="text-[10px] sm:text-[11px] font-semibold text-blue-700">
+                  <span className="text-[11px] font-semibold text-[#007AFF] bg-blue-50 px-1.5 py-0.5 rounded-md">
                     CLP · 15 kg
                   </span>
                 </div>
-                <p className="text-[11px] text-slate-500 mt-1 hidden sm:block">
+                <p className="text-[11px] text-slate-500 mt-1.5 hidden sm:block">
                   Dimensiones 55×35×25 cm · Sello verificado
                 </p>
               </div>
             </div>
 
             {/* Shipments Master Container */}
-            <div className="bg-white border border-slate-200/80 rounded-xl shadow-xs overflow-hidden">
-              <div className="p-4 sm:p-5 border-b border-slate-200 flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+            <div className="apple-card rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden">
+              <div className="p-4 sm:p-5 border-b border-slate-200/80 flex flex-col lg:flex-row lg:items-center justify-between gap-3">
                 <div>
-                  <span className="text-[10px] font-mono uppercase tracking-widest text-blue-600 font-semibold block">
+                  <span className="text-[10px] font-mono uppercase tracking-widest text-[#007AFF] font-bold block">
                     {currentUser.rol === 'TRANSPORTISTA'
                       ? `Envíos Asignados a ${currentUser.nombre}`
                       : `Control de Despachos · ${currentCountrySummary.nombre}`}
@@ -1905,16 +1922,16 @@ export default function App() {
                   </h2>
                 </div>
 
-                {/* Filters & Action Buttons */}
+                {/* Filters & Action Buttons — iOS Search Bar & Controls */}
                 <div className="flex flex-wrap items-center gap-2">
-                  <div className="relative flex-1 sm:flex-none sm:w-60 min-w-[160px]">
-                    <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                  <div className="relative flex-1 sm:flex-none sm:w-64 min-w-[170px]">
+                    <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                     <input
                       type="text"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       placeholder="Buscar estaca, comuna..."
-                      className="w-full pl-8 pr-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:bg-white focus:outline-none focus:border-blue-600"
+                      className="w-full pl-9 pr-3 py-2 text-xs bg-slate-100/80 hover:bg-slate-100 focus:bg-white border border-slate-200/80 rounded-xl focus:outline-none focus:border-[#007AFF] focus:ring-2 focus:ring-[#007AFF]/20 transition-all placeholder:text-slate-400 font-medium"
                     />
                   </div>
 
@@ -1923,7 +1940,7 @@ export default function App() {
                     onChange={(e) =>
                       setStateFilter(e.target.value as ShipmentStatus | 'TODOS')
                     }
-                    className="px-2.5 py-2 text-xs bg-slate-50 border border-slate-200 rounded-lg font-medium text-slate-700 focus:outline-none focus:border-blue-600 cursor-pointer"
+                    className="px-3 py-2 text-xs bg-slate-100/80 hover:bg-slate-100 border border-slate-200/80 rounded-xl font-semibold text-slate-700 focus:outline-none focus:border-[#007AFF] cursor-pointer transition-colors"
                   >
                     <option value="TODOS">Todos los estados</option>
                     <option value="Pendiente">Pendiente</option>
@@ -1936,7 +1953,7 @@ export default function App() {
 
                   <button
                     onClick={() => downloadShipmentsCsv(visibleShipments)}
-                    className="px-3 py-2 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-semibold rounded-lg transition-colors flex items-center gap-1.5 whitespace-nowrap shrink-0 cursor-pointer"
+                    className="px-3 py-2 bg-white border border-slate-200/80 hover:bg-slate-50 text-slate-700 text-xs font-semibold rounded-xl transition-all flex items-center gap-1.5 whitespace-nowrap shrink-0 cursor-pointer shadow-xs active:scale-95"
                   >
                     <Download className="w-3.5 h-3.5" />
                     <span className="hidden sm:inline">CSV</span>
@@ -1945,7 +1962,7 @@ export default function App() {
                   {activeRolePerms.canCreateShipment && (
                     <button
                       onClick={() => setShowNewShipmentModal(true)}
-                      className="w-full sm:w-auto justify-center px-3.5 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-lg transition-colors flex items-center gap-1.5 whitespace-nowrap shrink-0 cursor-pointer shadow-xs"
+                      className="w-full sm:w-auto justify-center px-4 py-2 bg-[#007AFF] hover:bg-[#0066d6] text-white text-xs font-semibold rounded-xl transition-all flex items-center gap-1.5 whitespace-nowrap shrink-0 cursor-pointer shadow-sm active:scale-95"
                     >
                       <Plus className="w-3.5 h-3.5" />
                       Nueva Orden de Envío
@@ -1955,13 +1972,13 @@ export default function App() {
               </div>
 
               {/* ===============================================================
-                  VISTA MÓVIL DE TARJETAS OPERATIVAS HALLMARK (md:hidden)
+                  VISTA MÓVIL DE TARJETAS OPERATIVAS (iOS Grouped Cards)
               =============================================================== */}
-              <div className="md:hidden divide-y divide-slate-100">
+              <div className="md:hidden p-3.5 space-y-3 bg-slate-50/60">
                 {visibleShipments.map((sh) => {
                   const assetObj = assets.find((a) => a.id === sh.activo_id);
                   return (
-                    <div key={sh.id} className="p-4 space-y-3">
+                    <div key={sh.id} className="apple-card p-4 rounded-2xl border border-slate-200/80 shadow-xs space-y-3 bg-white">
                       <div className="flex items-start justify-between gap-2">
                         <div className="min-w-0">
                           <button
@@ -1969,7 +1986,7 @@ export default function App() {
                               activeRolePerms.canReassignCarrier &&
                               setSelectedShipmentDetail(sh)
                             }
-                            className="font-mono text-xs font-bold text-blue-600 hover:underline inline-block"
+                            className="font-mono text-xs font-bold text-[#007AFF] hover:underline inline-block"
                           >
                             {sh.activo_id} · {sh.remito_numero}
                           </button>
@@ -1985,7 +2002,7 @@ export default function App() {
                         </div>
                       </div>
 
-                      <div className="text-xs text-slate-600 space-y-1.5 bg-slate-50/80 p-3 rounded-xl border border-slate-200/70">
+                      <div className="text-xs text-slate-600 space-y-2 bg-slate-50/90 p-3 rounded-xl border border-slate-200/70">
                         <div className="flex items-start gap-1.5">
                           <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0 mt-0.5" />
                           <span className="leading-snug">
@@ -1998,7 +2015,7 @@ export default function App() {
                           </span>
                           <a
                             href={`tel:${sh.telefono}`}
-                            className="font-mono text-blue-700 bg-blue-50 hover:bg-blue-100 px-2 py-0.5 rounded text-[11px] font-semibold inline-flex items-center gap-1 shrink-0"
+                            className="font-mono text-[#007AFF] bg-blue-50 hover:bg-blue-100 px-2.5 py-1 rounded-lg text-[11px] font-semibold inline-flex items-center gap-1 shrink-0"
                           >
                             <Phone className="w-3 h-3" />
                             {sh.telefono}
@@ -2014,12 +2031,12 @@ export default function App() {
                         </div>
                       </div>
 
-                      {/* Botones de Acción Táctiles Grandes en Móvil */}
+                      {/* Botones de Acción Táctiles Ergonómicos Apple (min 44px) */}
                       <div className="grid grid-cols-3 gap-2 pt-0.5">
                         {assetObj && (
                           <button
                             onClick={() => setQrBatchModalAssets([assetObj])}
-                            className="min-h-[42px] py-2 px-2 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer active:scale-95 transition-transform"
+                            className="h-11 px-2 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer active:scale-95 transition-all"
                           >
                             <QrCode className="w-3.5 h-3.5 text-slate-600" />
                             QR
@@ -2027,7 +2044,7 @@ export default function App() {
                         )}
                         <button
                           onClick={() => setRemitoModalShipment(sh)}
-                          className="min-h-[42px] py-2 px-2 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer active:scale-95 transition-transform"
+                          className="h-11 px-2 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer active:scale-95 transition-all"
                         >
                           <Printer className="w-3.5 h-3.5 text-slate-600" />
                           Remito
@@ -2038,13 +2055,13 @@ export default function App() {
                               setSelectedFieldShipmentId(sh.id);
                               setActiveModule('app_terreno');
                             }}
-                            className="min-h-[42px] py-2 px-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-1 shadow-xs cursor-pointer active:scale-95 transition-transform"
+                            className="h-11 px-2 bg-[#007AFF] hover:bg-[#0066d6] text-white rounded-xl text-xs font-bold flex items-center justify-center gap-1 shadow-sm cursor-pointer active:scale-95 transition-all"
                           >
                             {sh.estado === 'Entregado' ? 'Ver' : 'Operar'}
                             <ChevronRight className="w-3.5 h-3.5" />
                           </button>
                         ) : (
-                          <span className="min-h-[42px] py-2 px-2 bg-slate-100 text-slate-500 rounded-xl text-[11px] font-medium flex items-center justify-center gap-1">
+                          <span className="h-11 px-2 bg-slate-100 text-slate-500 rounded-xl text-[11px] font-medium flex items-center justify-center gap-1">
                             <Eye className="w-3.5 h-3.5" /> Lectura
                           </span>
                         )}
@@ -2279,14 +2296,14 @@ export default function App() {
       </main>
 
       {/* =====================================================================
-          BARRA DE NAVEGACIÓN INFERIOR HALLMARK PARA MÓVIL (md:hidden)
-          Táctil, ergonómica con soporte de safe-area y acceso a menú completo
+          BARRA DE NAVEGACIÓN INFERIOR APPLE LIQUID GLASS (md:hidden)
+          Con blur 24px, safe-area-inset-bottom, active pill tint e iconos refinados
       ===================================================================== */}
       <nav
-        className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-slate-900/95 backdrop-blur-md border-t border-slate-800 text-white shadow-2xl safe-bottom"
+        className="md:hidden fixed bottom-0 inset-x-0 z-40 apple-glass-dark border-t border-white/10 text-white shadow-2xl safe-bottom"
       >
         <div
-          className={`grid h-15 px-1 items-center ${allowedLogisticsStages.length <= 4
+          className={`grid h-[58px] px-1.5 items-center ${allowedLogisticsStages.length <= 4
               ? allowedLogisticsStages.length === 2
                 ? 'grid-cols-2'
                 : allowedLogisticsStages.length === 3
@@ -2310,13 +2327,13 @@ export default function App() {
                   setActiveModule(stage.id);
                   setMobileMenuOpen(false);
                 }}
-                className={`flex flex-col items-center justify-center py-1 transition-all rounded-lg cursor-pointer ${isActive
-                    ? 'text-blue-400 font-bold'
-                    : 'text-slate-400 hover:text-slate-200 active:scale-95'
+                className={`flex flex-col items-center justify-center py-1 transition-all rounded-xl cursor-pointer active:scale-95 ${isActive
+                    ? 'text-[#007AFF] font-bold'
+                    : 'text-slate-400 hover:text-slate-200'
                   }`}
               >
                 <div
-                  className={`p-1 rounded-md transition-colors ${isActive ? 'bg-blue-500/20 text-blue-400' : ''
+                  className={`p-1.5 rounded-xl transition-all ${isActive ? 'bg-[#007AFF]/20 text-[#007AFF] ring-1 ring-[#007AFF]/30' : ''
                     }`}
                 >
                   <Icon className="w-5 h-5" />
@@ -2333,14 +2350,14 @@ export default function App() {
             <button
               type="button"
               onClick={() => setMobileMenuOpen(true)}
-              className={`flex flex-col items-center justify-center py-1 transition-all rounded-lg cursor-pointer ${allowedLogisticsStages.slice(4).some((s) => s.id === activeModule)
-                  ? 'text-blue-400 font-bold'
-                  : 'text-slate-400 hover:text-slate-200 active:scale-95'
+              className={`flex flex-col items-center justify-center py-1 transition-all rounded-xl cursor-pointer active:scale-95 ${allowedLogisticsStages.slice(4).some((s) => s.id === activeModule)
+                  ? 'text-[#007AFF] font-bold'
+                  : 'text-slate-400 hover:text-slate-200'
                 }`}
             >
               <div
-                className={`p-1 rounded-md transition-colors ${allowedLogisticsStages.slice(4).some((s) => s.id === activeModule)
-                    ? 'bg-blue-500/20 text-blue-400'
+                className={`p-1.5 rounded-xl transition-all ${allowedLogisticsStages.slice(4).some((s) => s.id === activeModule)
+                    ? 'bg-[#007AFF]/20 text-[#007AFF] ring-1 ring-[#007AFF]/30'
                     : ''
                   }`}
               >
