@@ -67,6 +67,7 @@ import { InventoryAndIncidentsModule } from './components/InventoryAndIncidentsM
 import { DatabaseConfigModal } from './components/DatabaseConfigModal';
 import { LoginScreen } from './components/LoginScreen';
 import { UserManagementModal } from './components/UserManagementModal';
+import { SupabaseDataService } from './services/supabaseDataService';
 
 type ActiveModule =
   | 'torre_control'
@@ -249,7 +250,33 @@ export default function App() {
     setMobileMenuOpen(false);
   };
 
-  // Persist changes automatically
+  // Cargar datos en vivo desde Supabase al iniciar la aplicación
+  useEffect(() => {
+    let isMounted = true;
+    async function initSupabaseData() {
+      try {
+        const supaSnapshot = await SupabaseDataService.loadSnapshot();
+        if (supaSnapshot && isMounted) {
+          if (supaSnapshot.users.length > 0) setUsers(supaSnapshot.users);
+          if (supaSnapshot.assets.length > 0) setAssets(supaSnapshot.assets);
+          if (supaSnapshot.shipments.length > 0) setShipments(supaSnapshot.shipments);
+          if (supaSnapshot.movements.length > 0) setMovements(supaSnapshot.movements);
+          if (supaSnapshot.auditLogs.length > 0) setAuditLogs(supaSnapshot.auditLogs);
+          if (supaSnapshot.inventories.length > 0) setInventories(supaSnapshot.inventories);
+          if (supaSnapshot.incidents.length > 0) setIncidents(supaSnapshot.incidents);
+          console.log('✅ LogisticsConnect sincronizado con Supabase.');
+        }
+      } catch (err) {
+        console.warn('Nota: Usando caché local (Supabase offline o error):', err);
+      }
+    }
+    initSupabaseData();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  // Persist changes automatically in local storage as reliable fallback
   useEffect(() => {
     DatabaseRepository.saveUsers(users);
     DatabaseRepository.saveCurrentUserId(currentUserId);
@@ -333,6 +360,9 @@ export default function App() {
 
     setMovements((prev) => [newMov, ...prev]);
     setAuditLogs((prev) => [newAud, ...prev]);
+    // Sincronizar en tiempo real con Supabase
+    SupabaseDataService.insertMovement(newMov);
+    SupabaseDataService.insertAuditLog(newAud);
   };
 
   // Country & Role Filtering
@@ -377,70 +407,70 @@ export default function App() {
     badge: string;
     icon: React.ComponentType<{ className?: string }>;
   }[] = [
-    {
-      id: 'activos_catalogo',
-      step: 'Instancia 1',
-      title: '1. Activos y QR',
-      shortTitle: 'Activos',
-      subtitle: 'Alta de maletas y etiquetas QR',
-      badge: `${assets.length}`,
-      icon: Layers,
-    },
-    {
-      id: 'importador_excel',
-      step: 'Instancia 2',
-      title: '2. Carga Excel',
-      shortTitle: 'Excel',
-      subtitle: 'Importación y validador RUT',
-      badge: `${excelRows.length} filas`,
-      icon: FileSpreadsheet,
-    },
-    {
-      id: 'torre_control',
-      step: 'Instancia 3',
-      title:
-        currentUser.rol === 'TRANSPORTISTA'
-          ? 'Mis Envíos Asignados'
-          : '3. Torre de Despachos',
-      shortTitle: 'Despachos',
-      subtitle:
-        currentUser.rol === 'TRANSPORTISTA'
-          ? `Asignados a ${currentUser.organizacion}`
-          : 'Órdenes, rutas y Remitos PDF',
-      badge: `${visibleShipments.length}`,
-      icon: Package,
-    },
-    {
-      id: 'app_terreno',
-      step: 'Instancia 4',
-      title:
-        currentUser.rol === 'ENCARGADO_BODEGA'
-          ? '4. Armado en Bodega'
-          : '4. Terreno y Entrega',
-      shortTitle: 'Terreno QR',
-      subtitle: 'Armado, GPS Llegué, Fotos y Firma',
-      badge: 'Móvil / QR',
-      icon: Smartphone,
-    },
-    {
-      id: 'inventario_incidentes',
-      step: 'Instancia 5',
-      title: '5. Inventario y Fallas',
-      shortTitle: 'Inventario',
-      subtitle: 'Auditoría QR en bodega e incidentes',
-      badge: `${inventories.length}`,
-      icon: ClipboardCheck,
-    },
-    {
-      id: 'trazabilidad_auditoria',
-      step: 'Instancia 6',
-      title: '6. Validación y Logs',
-      shortTitle: 'Auditoría',
-      subtitle: 'Aprobación de fotos y bitácora',
-      badge: `${auditLogs.length}`,
-      icon: ShieldCheck,
-    },
-  ];
+      {
+        id: 'activos_catalogo',
+        step: 'Instancia 1',
+        title: '1. Activos y QR',
+        shortTitle: 'Activos',
+        subtitle: 'Alta de maletas y etiquetas QR',
+        badge: `${assets.length}`,
+        icon: Layers,
+      },
+      {
+        id: 'importador_excel',
+        step: 'Instancia 2',
+        title: '2. Carga Excel',
+        shortTitle: 'Excel',
+        subtitle: 'Importación y validador RUT',
+        badge: `${excelRows.length} filas`,
+        icon: FileSpreadsheet,
+      },
+      {
+        id: 'torre_control',
+        step: 'Instancia 3',
+        title:
+          currentUser.rol === 'TRANSPORTISTA'
+            ? 'Mis Envíos Asignados'
+            : '3. Torre de Despachos',
+        shortTitle: 'Despachos',
+        subtitle:
+          currentUser.rol === 'TRANSPORTISTA'
+            ? `Asignados a ${currentUser.organizacion}`
+            : 'Órdenes, rutas y Remitos PDF',
+        badge: `${visibleShipments.length}`,
+        icon: Package,
+      },
+      {
+        id: 'app_terreno',
+        step: 'Instancia 4',
+        title:
+          currentUser.rol === 'ENCARGADO_BODEGA'
+            ? '4. Armado en Bodega'
+            : '4. Terreno y Entrega',
+        shortTitle: 'Terreno QR',
+        subtitle: 'Armado, GPS Llegué, Fotos y Firma',
+        badge: 'Móvil / QR',
+        icon: Smartphone,
+      },
+      {
+        id: 'inventario_incidentes',
+        step: 'Instancia 5',
+        title: '5. Inventario y Fallas',
+        shortTitle: 'Inventario',
+        subtitle: 'Auditoría QR en bodega e incidentes',
+        badge: `${inventories.length}`,
+        icon: ClipboardCheck,
+      },
+      {
+        id: 'trazabilidad_auditoria',
+        step: 'Instancia 6',
+        title: '6. Validación y Logs',
+        shortTitle: 'Auditoría',
+        subtitle: 'Aprobación de fotos y bitácora',
+        badge: `${auditLogs.length}`,
+        icon: ShieldCheck,
+      },
+    ];
 
   const allowedLogisticsStages = useMemo(
     () =>
@@ -460,15 +490,16 @@ export default function App() {
         s.id === shipmentId ? { ...s, estado: 'Listo para despacho' } : s
       )
     );
+    SupabaseDataService.upsertShipment({ ...target, estado: 'Listo para despacho' });
     setAssets((prev) =>
       prev.map((a) =>
         a.id === target.activo_id
           ? {
-              ...a,
-              estado: 'Listo para despacho',
-              sello_seguridad: sealCode,
-              componentes: a.componentes.map((c) => ({ ...c, verificado: true })),
-            }
+            ...a,
+            estado: 'Listo para despacho',
+            sello_seguridad: sealCode,
+            componentes: a.componentes.map((c) => ({ ...c, verificado: true })),
+          }
           : a
       )
     );
@@ -497,15 +528,16 @@ export default function App() {
     setShipments((prev) =>
       prev.map((s) => (s.id === shipmentId ? { ...s, estado: 'En curso' } : s))
     );
+    SupabaseDataService.upsertShipment({ ...target, estado: 'En curso' });
     setAssets((prev) =>
       prev.map((a) =>
         a.id === target.activo_id
           ? {
-              ...a,
-              estado: 'En curso',
-              ubicacion_actual: `En tránsito → ${target.estaca_distrito} (${target.comuna})`,
-              custodio_actual: target.transportista_nombre,
-            }
+            ...a,
+            estado: 'En curso',
+            ubicacion_actual: `En tránsito → ${target.estaca_distrito} (${target.comuna})`,
+            custodio_actual: target.transportista_nombre,
+          }
           : a
       )
     );
@@ -543,23 +575,30 @@ export default function App() {
       prev.map((s) =>
         s.id === shipmentId
           ? {
-              ...s,
-              estado: 'Llegué',
-              llegada_hora_local: nowLocal,
-              llegada_gps: gps,
-              distancia_destino_metros: distanceMeters,
-            }
+            ...s,
+            estado: 'Llegué',
+            llegada_hora_local: nowLocal,
+            llegada_gps: gps,
+            distancia_destino_metros: distanceMeters,
+          }
           : s
       )
     );
+    SupabaseDataService.upsertShipment({
+      ...target,
+      estado: 'Llegué',
+      llegada_hora_local: nowLocal,
+      llegada_gps: gps,
+      distancia_destino_metros: distanceMeters,
+    });
     setAssets((prev) =>
       prev.map((a) =>
         a.id === target.activo_id
           ? {
-              ...a,
-              estado: 'Llegué',
-              ubicacion_actual: `${target.estaca_distrito} (${target.direccion}, ${target.comuna})`,
-            }
+            ...a,
+            estado: 'Llegué',
+            ubicacion_actual: `${target.estaca_distrito} (${target.direccion}, ${target.comuna})`,
+          }
           : a
       )
     );
@@ -609,32 +648,47 @@ export default function App() {
       prev.map((s) =>
         s.id === shipmentId
           ? {
-              ...s,
-              estado: 'Entregado',
-              receptor_final: {
-                ...receiver,
-                fecha_recepcion_utc: nowUtc,
-                fecha_recepcion_local: nowLocal,
-              },
-              foto_remito_firmado: fotoRemito,
-              foto_receptor_maleta: fotoReceptor,
-              firma_digital_trazo: firmaDigitalTexto,
-              firma_digital_imagen: firmaDigitalImagen,
-              estado_revision_evidencia: 'Pendiente de revisión',
-            }
+            ...s,
+            estado: 'Entregado',
+            receptor_final: {
+              ...receiver,
+              fecha_recepcion_utc: nowUtc,
+              fecha_recepcion_local: nowLocal,
+            },
+            foto_remito_firmado: fotoRemito,
+            foto_receptor_maleta: fotoReceptor,
+            firma_digital_trazo: firmaDigitalTexto,
+            firma_digital_imagen: firmaDigitalImagen,
+            estado_revision_evidencia: 'Pendiente de revisión',
+          }
           : s
       )
     );
+
+    SupabaseDataService.upsertShipment({
+      ...target,
+      estado: 'Entregado',
+      receptor_final: {
+        ...receiver,
+        fecha_recepcion_utc: nowUtc,
+        fecha_recepcion_local: nowLocal,
+      },
+      foto_remito_firmado: fotoRemito,
+      foto_receptor_maleta: fotoReceptor,
+      firma_digital_trazo: firmaDigitalTexto,
+      firma_digital_imagen: firmaDigitalImagen,
+      estado_revision_evidencia: 'Pendiente de revisión',
+    });
 
     setAssets((prev) =>
       prev.map((a) =>
         a.id === target.activo_id
           ? {
-              ...a,
-              estado: 'Entregado',
-              ubicacion_actual: `${target.estaca_distrito} (${target.direccion}, ${target.comuna})`,
-              custodio_actual: `${target.estaca_distrito} — ${receiver.nombre_completo} (${receiver.parentesco_rol})`,
-            }
+            ...a,
+            estado: 'Entregado',
+            ubicacion_actual: `${target.estaca_distrito} (${target.direccion}, ${target.comuna})`,
+            custodio_actual: `${target.estaca_distrito} — ${receiver.nombre_completo} (${receiver.parentesco_rol})`,
+          }
           : a
       )
     );
@@ -673,6 +727,7 @@ export default function App() {
           : s
       )
     );
+    SupabaseDataService.upsertShipment({ ...target, estado: 'Incidencia', motivo_incidencia: motivo });
     setAssets((prev) =>
       prev.map((a) =>
         a.id === target.activo_id ? { ...a, estado: 'Incidente' } : a
@@ -699,6 +754,7 @@ export default function App() {
   // Asset & Catalog Handlers
   const handleRegisterAsset = (newAsset: AssetItem) => {
     setAssets((prev) => [newAsset, ...prev]);
+    SupabaseDataService.upsertAsset(newAsset);
     recordMovementAndAudit({
       activoId: newAsset.id,
       tipoEvento: 'ALTA_ACTIVO',
@@ -727,13 +783,14 @@ export default function App() {
       prev.map((a) =>
         a.id === assetId
           ? {
-              ...a,
-              ubicacion_actual: newLocation,
-              observaciones: newObservations,
-            }
+            ...a,
+            ubicacion_actual: newLocation,
+            observaciones: newObservations,
+          }
           : a
       )
     );
+    SupabaseDataService.upsertAsset({ ...target, ubicacion_actual: newLocation, observaciones: newObservations });
     recordMovementAndAudit({
       activoId: assetId,
       tipoEvento: 'TRANSFERENCIA_CUSTODIO',
@@ -758,14 +815,15 @@ export default function App() {
       prev.map((a) =>
         a.id === assetId
           ? {
-              ...a,
-              estado: 'Dado de baja',
-              fecha_baja: today,
-              motivo_baja: reason,
-            }
+            ...a,
+            estado: 'Dado de baja',
+            fecha_baja: today,
+            motivo_baja: reason,
+          }
           : a
       )
     );
+    SupabaseDataService.upsertAsset({ ...target, estado: 'Dado de baja', fecha_baja: today, motivo_baja: reason });
     recordMovementAndAudit({
       activoId: assetId,
       tipoEvento: 'BAJA_ACTIVO',
@@ -799,13 +857,14 @@ export default function App() {
       prev.map((s) =>
         s.id === shipmentId
           ? {
-              ...s,
-              estado_revision_evidencia: decision,
-              comentario_revision: comment,
-            }
+            ...s,
+            estado_revision_evidencia: decision,
+            comentario_revision: comment,
+          }
           : s
       )
     );
+    SupabaseDataService.upsertShipment({ ...target, estado_revision_evidencia: decision, comentario_revision: comment });
 
     if (decision === 'Aprobada') {
       setAssets((prev) =>
@@ -948,6 +1007,8 @@ export default function App() {
 
     setAssets((prev) => [...newAssets, ...prev]);
     setShipments((prev) => [...newShipments, ...prev]);
+    newAssets.forEach((a) => SupabaseDataService.upsertAsset(a));
+    newShipments.forEach((s) => SupabaseDataService.upsertShipment(s));
     setActiveModule('torre_control');
   };
 
@@ -978,6 +1039,7 @@ export default function App() {
       hallazgos_otra_ubicacion_ids: [],
     };
     setInventories((prev) => [newCamp, ...prev]);
+    SupabaseDataService.upsertInventory(newCamp);
   };
 
   const handleScanAssetInCampaign = (
@@ -1007,15 +1069,25 @@ export default function App() {
     campaignId: string,
     observaciones: string
   ) => {
+    const targetCamp = inventories.find((i) => i.id === campaignId);
+    if (targetCamp) {
+      SupabaseDataService.upsertInventory({
+        ...targetCamp,
+        estado: 'Conciliada y Cerrada',
+        fecha_cierre: new Date().toISOString().slice(0, 10),
+        observaciones_conciliacion: observaciones,
+      });
+    }
+
     setInventories((prev) =>
       prev.map((inv) =>
         inv.id === campaignId
           ? {
-              ...inv,
-              estado: 'Conciliada y Cerrada',
-              fecha_cierre: new Date().toISOString().slice(0, 10),
-              observaciones_conciliacion: observaciones,
-            }
+            ...inv,
+            estado: 'Conciliada y Cerrada',
+            fecha_cierre: new Date().toISOString().slice(0, 10),
+            observaciones_conciliacion: observaciones,
+          }
           : inv
       )
     );
@@ -1023,6 +1095,7 @@ export default function App() {
 
   const handleCreateIncident = (incident: AssetIncidentRecord) => {
     setIncidents((prev) => [incident, ...prev]);
+    SupabaseDataService.upsertIncident(incident);
     setAssets((prev) =>
       prev.map((a) =>
         a.id === incident.activo_id
@@ -1040,6 +1113,7 @@ export default function App() {
       )
     );
     if (target) {
+      SupabaseDataService.upsertIncident({ ...target, estado_gestion: 'Cerrado' });
       setAssets((prev) =>
         prev.map((a) =>
           a.id === target.activo_id ? { ...a, estado: 'Disponible en bodega' } : a
@@ -1088,20 +1162,29 @@ export default function App() {
     };
 
     setShipments((prev) => [newOrder, ...prev]);
+    SupabaseDataService.upsertShipment(newOrder);
     setShowNewShipmentModal(false);
     setRemitoModalShipment(newOrder);
   };
 
   const handleReassignCarrier = (shipmentId: string, carrierId: string) => {
     const carrier = CARRIERS.find((c) => c.id === carrierId) || CARRIERS[0];
+    const target = shipments.find((s) => s.id === shipmentId);
+    if (target) {
+      SupabaseDataService.upsertShipment({
+        ...target,
+        transportista_id: carrier.id,
+        transportista_nombre: carrier.nombre,
+      });
+    }
     setShipments((prev) =>
       prev.map((s) =>
         s.id === shipmentId
           ? {
-              ...s,
-              transportista_id: carrier.id,
-              transportista_nombre: carrier.nombre,
-            }
+            ...s,
+            transportista_id: carrier.id,
+            transportista_nombre: carrier.nombre,
+          }
           : s
       )
     );
@@ -1158,6 +1241,7 @@ export default function App() {
     const updatedUsers = [...users, newUser];
     setUsers(updatedUsers);
     DatabaseRepository.saveUsers(updatedUsers);
+    SupabaseDataService.upsertUser(newUser);
 
     // Registro inmutable de auditoría forense
     const auditEntry: AuditLogEntry = {
@@ -1192,6 +1276,7 @@ export default function App() {
     );
     setUsers(updatedUsers);
     DatabaseRepository.saveUsers(updatedUsers);
+    SupabaseDataService.upsertUser({ ...targetUser, activo: !targetUser.activo });
 
     const auditEntry: AuditLogEntry = {
       id: `AUD-${Date.now()}`,
@@ -1312,13 +1397,12 @@ export default function App() {
                     key={c.codigo}
                     disabled={!isAllowedCountry}
                     onClick={() => isAllowedCountry && setSelectedCountry(c.codigo)}
-                    className={`px-2 py-1 rounded text-[11px] font-semibold transition-colors whitespace-nowrap shrink-0 flex items-center gap-1 ${
-                      selectedCountry === c.codigo
+                    className={`px-2 py-1 rounded text-[11px] font-semibold transition-colors whitespace-nowrap shrink-0 flex items-center gap-1 ${selectedCountry === c.codigo
                         ? 'bg-blue-600 text-white cursor-pointer'
                         : isAllowedCountry
-                        ? 'text-slate-400 hover:text-white cursor-pointer'
-                        : 'text-slate-600 cursor-not-allowed opacity-50'
-                    }`}
+                          ? 'text-slate-400 hover:text-white cursor-pointer'
+                          : 'text-slate-600 cursor-not-allowed opacity-50'
+                      }`}
                     title={
                       isAllowedCountry
                         ? c.nombre
@@ -1392,15 +1476,14 @@ export default function App() {
         <div className="bg-slate-950/90 border-t border-slate-800/90">
           <div className="max-w-[1440px] mx-auto px-3 sm:px-6 py-2">
             <div
-              className={`flex md:grid gap-2 overflow-x-auto no-scrollbar pb-0.5 ${
-                allowedLogisticsStages.length === 2
+              className={`flex md:grid gap-2 overflow-x-auto no-scrollbar pb-0.5 ${allowedLogisticsStages.length === 2
                   ? 'md:grid-cols-2 max-w-2xl'
                   : allowedLogisticsStages.length === 3
-                  ? 'md:grid-cols-3 max-w-4xl'
-                  : allowedLogisticsStages.length === 4
-                  ? 'md:grid-cols-4'
-                  : 'md:grid-cols-6'
-              }`}
+                    ? 'md:grid-cols-3 max-w-4xl'
+                    : allowedLogisticsStages.length === 4
+                      ? 'md:grid-cols-4'
+                      : 'md:grid-cols-6'
+                }`}
             >
               {allowedLogisticsStages.map((stage) => {
                 const Icon = stage.icon;
@@ -1413,26 +1496,23 @@ export default function App() {
                       setActiveModule(stage.id);
                       setMobileMenuOpen(false);
                     }}
-                    className={`group text-left px-3 py-2 rounded-lg border transition-all shrink-0 min-w-[165px] md:min-w-0 cursor-pointer flex flex-col justify-between ${
-                      isActive
+                    className={`group text-left px-3 py-2 rounded-lg border transition-all shrink-0 min-w-[165px] md:min-w-0 cursor-pointer flex flex-col justify-between ${isActive
                         ? 'bg-blue-600 text-white border-blue-500 shadow-xs'
                         : 'bg-slate-900/90 text-slate-300 border-slate-800 hover:bg-slate-800 hover:text-white'
-                    }`}
+                      }`}
                   >
                     <div className="flex items-center justify-between gap-1.5 w-full">
                       <span
-                        className={`text-[10px] font-mono uppercase tracking-wider font-semibold ${
-                          isActive ? 'text-blue-100' : 'text-blue-400'
-                        }`}
+                        className={`text-[10px] font-mono uppercase tracking-wider font-semibold ${isActive ? 'text-blue-100' : 'text-blue-400'
+                          }`}
                       >
                         {stage.step}
                       </span>
                       <span
-                        className={`text-[10px] font-mono font-bold px-1.5 py-0.5 rounded ${
-                          isActive
+                        className={`text-[10px] font-mono font-bold px-1.5 py-0.5 rounded ${isActive
                             ? 'bg-blue-700 text-white'
                             : 'bg-slate-800 text-slate-300'
-                        }`}
+                          }`}
                       >
                         {stage.badge}
                       </span>
@@ -1440,11 +1520,10 @@ export default function App() {
 
                     <div className="flex items-center gap-1.5 mt-1">
                       <Icon
-                        className={`w-3.5 h-3.5 shrink-0 ${
-                          isActive
+                        className={`w-3.5 h-3.5 shrink-0 ${isActive
                             ? 'text-white'
                             : 'text-slate-400 group-hover:text-white'
-                        }`}
+                          }`}
                       />
                       <span className="text-xs font-bold truncate">
                         {stage.title}
@@ -1452,9 +1531,8 @@ export default function App() {
                     </div>
 
                     <span
-                      className={`text-[10px] truncate mt-0.5 hidden lg:block ${
-                        isActive ? 'text-blue-100' : 'text-slate-400'
-                      }`}
+                      className={`text-[10px] truncate mt-0.5 hidden lg:block ${isActive ? 'text-blue-100' : 'text-slate-400'
+                        }`}
                     >
                       {stage.subtitle}
                     </span>
@@ -1483,20 +1561,18 @@ export default function App() {
                       setActiveModule(stage.id);
                       setMobileMenuOpen(false);
                     }}
-                    className={`w-full p-3 rounded-lg border text-left flex items-center justify-between ${
-                      isActive
+                    className={`w-full p-3 rounded-lg border text-left flex items-center justify-between ${isActive
                         ? 'bg-blue-600 text-white border-blue-500'
                         : 'bg-slate-800/80 text-slate-200 border-slate-700'
-                    }`}
+                      }`}
                   >
                     <div className="flex items-center gap-3">
                       <Icon className="w-4 h-4 shrink-0" />
                       <div>
                         <div className="text-xs font-bold">{stage.title}</div>
                         <div
-                          className={`text-[11px] ${
-                            isActive ? 'text-blue-100' : 'text-slate-400'
-                          }`}
+                          className={`text-[11px] ${isActive ? 'text-blue-100' : 'text-slate-400'
+                            }`}
                         >
                           {stage.subtitle}
                         </div>
@@ -1608,7 +1684,7 @@ export default function App() {
                   <span className="text-xl sm:text-2xl font-bold font-mono text-slate-900 tabular-nums">
                     {currentUser.rol === 'TRANSPORTISTA'
                       ? visibleShipments.filter((s) => s.estado === 'Entregado')
-                          .length
+                        .length
                       : `${currentCountrySummary.centros_entregados}/${currentCountrySummary.centros_totales_2026}`}
                   </span>
                   <span className="text-[11px] font-semibold text-emerald-700 tabular-nums">
@@ -1912,14 +1988,13 @@ export default function App() {
                             {sh.foto_remito_firmado && sh.foto_receptor_maleta ? (
                               <div>
                                 <span
-                                  className={`text-[11px] font-semibold flex items-center gap-1 ${
-                                    sh.estado_revision_evidencia === 'Aprobada'
+                                  className={`text-[11px] font-semibold flex items-center gap-1 ${sh.estado_revision_evidencia === 'Aprobada'
                                       ? 'text-emerald-700'
                                       : sh.estado_revision_evidencia ===
                                         'Reintento solicitado'
-                                      ? 'text-rose-700'
-                                      : 'text-amber-700'
-                                  }`}
+                                        ? 'text-rose-700'
+                                        : 'text-amber-700'
+                                    }`}
                                 >
                                   <CheckCircle2 className="w-3.5 h-3.5" />2 Fotos + Firma (
                                   {sh.estado_revision_evidencia})
@@ -2053,15 +2128,14 @@ export default function App() {
           Muestra dinámicamente solo las pantallas autorizadas para el rol
       ===================================================================== */}
       <nav
-        className={`md:hidden fixed bottom-0 inset-x-0 z-40 bg-slate-900 border-t border-slate-800 text-white grid h-16 px-1 ${
-          allowedLogisticsStages.length === 2
+        className={`md:hidden fixed bottom-0 inset-x-0 z-40 bg-slate-900 border-t border-slate-800 text-white grid h-16 px-1 ${allowedLogisticsStages.length === 2
             ? 'grid-cols-2'
             : allowedLogisticsStages.length === 3
-            ? 'grid-cols-3'
-            : allowedLogisticsStages.length === 4
-            ? 'grid-cols-4'
-            : 'grid-cols-5'
-        }`}
+              ? 'grid-cols-3'
+              : allowedLogisticsStages.length === 4
+                ? 'grid-cols-4'
+                : 'grid-cols-5'
+          }`}
       >
         {allowedLogisticsStages.slice(0, 5).map((stage) => {
           const Icon = stage.icon;
@@ -2074,9 +2148,8 @@ export default function App() {
                 setActiveModule(stage.id);
                 setMobileMenuOpen(false);
               }}
-              className={`flex flex-col items-center justify-center gap-1 ${
-                isActive ? 'text-blue-400 font-bold' : 'text-slate-400'
-              }`}
+              className={`flex flex-col items-center justify-center gap-1 ${isActive ? 'text-blue-400 font-bold' : 'text-slate-400'
+                }`}
             >
               <Icon className="w-5 h-5" />
               <span className="text-[10px] truncate max-w-[72px]">

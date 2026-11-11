@@ -26,6 +26,7 @@ import {
   isSupabaseConfigured,
   testSupabaseConnection,
 } from '../services/supabaseClient';
+import { SupabaseDataService } from '../services/supabaseDataService';
 
 interface DatabaseConfigModalProps {
   snapshot: PersistedDatabaseSnapshot;
@@ -52,6 +53,28 @@ export const DatabaseConfigModal: React.FC<DatabaseConfigModalProps> = ({
     tableFound?: boolean;
     url?: string;
   } | null>(null);
+
+  const [isSyncing, setIsSyncing] = useState(false);
+  const [syncResult, setSyncResult] = useState<{
+    success: boolean;
+    message: string;
+  } | null>(null);
+
+  const handleSyncToSupabase = async () => {
+    setIsSyncing(true);
+    setSyncResult(null);
+    try {
+      const res = await SupabaseDataService.seedAll(snapshot);
+      setSyncResult(res);
+    } catch (e) {
+      setSyncResult({
+        success: false,
+        message: 'Error al sincronizar: ' + (e instanceof Error ? e.message : String(e)),
+      });
+    } finally {
+      setIsSyncing(false);
+    }
+  };
 
   const handleTestConnection = async () => {
     setIsTesting(true);
@@ -239,6 +262,46 @@ export const DatabaseConfigModal: React.FC<DatabaseConfigModalProps> = ({
                       Sugerencia: Ve a la pestaña <b>"Esquema Relacional"</b>, copia el script SQL y pégalo en el <b>SQL Editor</b> de tu panel de Supabase para inicializar las tablas con un clic.
                     </p>
                   )}
+                </div>
+              </div>
+            )}
+
+            {/* Sincronización Manual de Datos a Supabase */}
+            <div className="p-4 rounded-lg border border-blue-200 bg-blue-50/60 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div>
+                <h4 className="text-xs font-bold text-blue-950 flex items-center gap-1.5">
+                  <Cloud className="w-4 h-4 text-blue-600" />
+                  Sincronización Total con Base de Datos Supabase
+                </h4>
+                <p className="text-[11px] text-blue-800 mt-0.5">
+                  Sube o actualiza en bloque todos los activos ({snapshot.assets.length}), envíos ({snapshot.shipments.length}) y usuarios ({snapshot.users.length}) directamente a tus tablas de Supabase.
+                </p>
+              </div>
+              <button
+                onClick={handleSyncToSupabase}
+                disabled={isSyncing}
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white text-xs font-bold rounded-md shadow-xs flex items-center justify-center gap-2 cursor-pointer whitespace-nowrap shrink-0"
+              >
+                <RefreshCw className={`w-3.5 h-3.5 ${isSyncing ? 'animate-spin' : ''}`} />
+                {isSyncing ? 'Sincronizando...' : 'Sincronizar a Supabase'}
+              </button>
+            </div>
+
+            {syncResult && (
+              <div
+                className={`p-3.5 rounded-lg border text-xs flex items-start gap-2.5 ${
+                  syncResult.success
+                    ? 'bg-emerald-50 border-emerald-200 text-emerald-900'
+                    : 'bg-rose-50 border-rose-200 text-rose-900'
+                }`}
+              >
+                {syncResult.success ? (
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                ) : (
+                  <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
+                )}
+                <div>
+                  <p className="font-semibold">{syncResult.message}</p>
                 </div>
               </div>
             )}

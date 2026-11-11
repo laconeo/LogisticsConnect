@@ -309,3 +309,4 @@ VALUES
   ('proyector_multimedia', 'Proyector Multimedia Epson', false, true, 3, 'Tv', 'Proyector, control remoto y cable HDMI.'),
   ('kit_red_satelital', 'Kit Conectividad y Red Starlink', true, true, 4, 'Wifi', 'Antena, router Wi-Fi y cables de alimentación.')
 ON CONFLICT (id) DO NOTHING;
+
